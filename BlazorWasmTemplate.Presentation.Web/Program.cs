@@ -1,4 +1,6 @@
+using BlazorWasmTemplate.Infrastructure;
 using BlazorWasmTemplate.Presentation.Web.Components;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +8,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// DbContext登録（設定はInfrastructureのものを使う）
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 var app = builder.Build();
+
+// マイグレーションが全部適用済みかチェック
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var pending = db.Database.GetPendingMigrations();
+
+    if (pending.Any())
+    {
+        Console.Error.WriteLine("ERROR: There are pending migrations.");
+        Environment.Exit(-1);  // 強制終了
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
