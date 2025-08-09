@@ -35,6 +35,11 @@ namespace BlazorWasmTemplate.Infrastructure
             }
 
             // Fluent API設定が必要であればここで行う
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.Code)
+                    .IsUnique();
+            });
         }
     }
 }
