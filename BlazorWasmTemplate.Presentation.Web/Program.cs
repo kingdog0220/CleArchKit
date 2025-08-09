@@ -10,7 +10,8 @@ builder.Services.AddRazorComponents()
 
 // DbContext登録（設定はInfrastructureのものを使う）
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    npgsqlOptions => npgsqlOptions.MigrationsAssembly("BlazorWasmTemplate.Migrations")));
 
 var app = builder.Build();
 

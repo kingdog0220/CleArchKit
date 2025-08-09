@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace BlazorWasmTemplate.Migrations
 {
+    /// <summary>
+    /// dotnet ef コマンド実行時に DbContext を生成するためのファクトリ
+    /// </summary>
     public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         public AppDbContext CreateDbContext(string[] args)
@@ -22,7 +25,11 @@ namespace BlazorWasmTemplate.Migrations
 
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseNpgsql(
+                connectionString,
+                // マイグレーションの出力先
+                b => b.MigrationsAssembly("BlazorWasmTemplate.Migrations")
+            );
             return new AppDbContext(optionsBuilder.Options);
         }
     }
