@@ -9,11 +9,14 @@ namespace BlazorWasmTemplate.Migrations
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            // プロジェクトのルートを基準に appsettings.json を読み込む
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()) // このときの CurrentDirectory は通常 startup project のディレクトリ
-                .AddJsonFile("appsettings.Development.json")
-                .Build();
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory()) // ← ここでSetBasePathを使うために必要なusingとパッケージも忘れずに
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables();
+
+            IConfiguration configuration = builder.Build();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
