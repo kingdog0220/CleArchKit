@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasmTemplate.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasmTemplate.Migrations", "BlazorWasmTemplate.Migrations\BlazorWasmTemplate.Migrations.csproj", "{CFA2871E-A92A-467C-AB35-4B3ACA7FC89E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWasmTemplate.MigrationChecker", "BlazorWasmTemplate.MigrationChecker\BlazorWasmTemplate.MigrationChecker.csproj", "{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{CFA2871E-A92A-467C-AB35-4B3ACA7FC89E}.Release|x64.Build.0 = Release|Any CPU
 		{CFA2871E-A92A-467C-AB35-4B3ACA7FC89E}.Release|x86.ActiveCfg = Release|Any CPU
 		{CFA2871E-A92A-467C-AB35-4B3ACA7FC89E}.Release|x86.Build.0 = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|x64.Build.0 = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Debug|x86.Build.0 = Debug|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|x64.ActiveCfg = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|x64.Build.0 = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|x86.ActiveCfg = Release|Any CPU
+		{06C0273A-EDF1-41F5-A776-93D9B3BFFF9C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
