@@ -13,8 +13,13 @@ namespace BlazorWasmTemplate.Migrations
         public AppDbContext CreateDbContext(string[] args)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+
+            // Webプロジェクトのディレクトリを基準にする
+            var solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+            var webProjectPath = Path.Combine(solutionDir, "BlazorWasmTemplate.Presentation.Web");
+
             var builder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory()) // ← ここでSetBasePathを使うために必要なusingとパッケージも忘れずに
+                    .SetBasePath(webProjectPath)
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables();
