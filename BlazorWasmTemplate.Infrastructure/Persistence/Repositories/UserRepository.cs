@@ -1,33 +1,48 @@
 using BlazorWasmTemplate.Domain.Entities;
 using BlazorWasmTemplate.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWasmTemplate.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task<List<User>> GetAllAsync()
+        private readonly AppDbContext _dbContext;
+
+        public UserRepository(AppDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task<User?> GetByIdAsync(Guid id)
+        public async Task<List<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.ToListAsync();
         }
 
-        public Task AddAsync(User user)
+        public async Task<User?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Users.FindAsync(id);
         }
 
-        public Task UpdateAsync(User user)
+        public async Task AddAsync(User user)
         {
-            throw new NotImplementedException();
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var user = await _dbContext.Users.FindAsync(id);
+            if (user != null)
+            {
+                _dbContext.Users.Remove(user);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
     }
