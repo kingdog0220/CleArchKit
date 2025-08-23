@@ -1,5 +1,14 @@
 using System.Diagnostics;
+using BlazorWasmTemplate.Application.Users.Cache;
+using BlazorWasmTemplate.Application.Users.Events;
+using BlazorWasmTemplate.Domain.Events;
+using BlazorWasmTemplate.Domain.Users.Events;
+using BlazorWasmTemplate.Domain.Users.Repositories;
+using BlazorWasmTemplate.Infrastructure.Events;
+using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
+using BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories;
 using BlazorWasmTemplate.Presentation.Web.Components;
+using Microsoft.EntityFrameworkCore;
 
 // マイグレーションが全部適用済みかチェックする
 // マイグレーションを使用しない、適用済みかチェックしなくてもいい場合はこのコードは削除して問題ない
@@ -29,6 +38,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// DBContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Cache
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IUserCache, UserCache>();
+
+// Dispatcher
+builder.Services.AddSingleton<IDomainEventDispatcher, InMemoryDomainEventDispatcher>();
+
+// Application Event Handler
+builder.Services.AddScoped<IEventHandler<UserUpdatedEvent>, UserUpdatedEventHandler>();
 
 var app = builder.Build();
 
