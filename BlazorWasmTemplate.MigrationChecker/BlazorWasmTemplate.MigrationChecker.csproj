@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWasmTemplate.Infrastructure\BlazorWasmTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="..\BlazorWasmTemplate.Migrations\BlazorWasmTemplate.Migrations.csproj" />
   </ItemGroup>
 
 </Project>
