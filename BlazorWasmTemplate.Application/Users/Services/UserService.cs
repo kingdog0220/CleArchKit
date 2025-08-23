@@ -1,5 +1,7 @@
 using BlazorWasmTemplate.Application.Users.Cache;
+using BlazorWasmTemplate.Domain.Events;
 using BlazorWasmTemplate.Domain.Users.Entities;
+using BlazorWasmTemplate.Domain.Users.Events;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 
 namespace BlazorWasmTemplate.Application.Users.Services
@@ -9,10 +11,13 @@ namespace BlazorWasmTemplate.Application.Users.Services
         private readonly IUserRepository _repository;
         private readonly IUserCache _cache;
 
-        public UserService(IUserRepository userRepository, IUserCache userCache)
+        private readonly IDomainEventDispatcher _dispatcher;
+
+        public UserService(IUserRepository userRepository, IUserCache userCache, IDomainEventDispatcher dispatcher)
         {
             _repository = userRepository;
             _cache = userCache;
+            _dispatcher = dispatcher;
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -28,19 +33,19 @@ namespace BlazorWasmTemplate.Application.Users.Services
         public async Task AddAsync(User user)
         {
             await _repository.AddAsync(user);
-            await _cache.RefreshAsync();
+            await _dispatcher.DispatchAsync(new UserUpdatedEvent(user.Id));
         }
 
         public async Task UpdateAsync(User user)
         {
             await _repository.UpdateAsync(user);
-            await _cache.RefreshAsync();
+            await _dispatcher.DispatchAsync(new UserUpdatedEvent(user.Id));
         }
 
         public async Task DeleteAsync(Guid id)
         {
             await _repository.DeleteAsync(id);
-            await _cache.RefreshAsync();
+            await _dispatcher.DispatchAsync(new UserUpdatedEvent(id));
         }
 
     }
