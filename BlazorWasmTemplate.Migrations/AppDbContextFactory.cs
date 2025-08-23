@@ -1,4 +1,4 @@
-using BlazorWasmTemplate.Infrastructure;
+using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

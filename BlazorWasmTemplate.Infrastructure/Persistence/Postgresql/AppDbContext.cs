@@ -1,7 +1,7 @@
 using BlazorWasmTemplate.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorWasmTemplate.Infrastructure
+namespace BlazorWasmTemplate.Infrastructure.Persistence.Postgresql
 {
     public class AppDbContext : DbContext
     {
