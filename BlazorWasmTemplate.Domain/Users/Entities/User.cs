@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorWasmTemplate.Domain.Entities
+namespace BlazorWasmTemplate.Domain.Users.Entities
 {
     /// <summary>
     /// ユーザー

@@ -1,5 +1,5 @@
-using BlazorWasmTemplate.Domain.Entities;
-using BlazorWasmTemplate.Domain.Repositories;
+using BlazorWasmTemplate.Domain.Users.Entities;
+using BlazorWasmTemplate.Domain.Users.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace BlazorWasmTemplate.Application.Users.Cache

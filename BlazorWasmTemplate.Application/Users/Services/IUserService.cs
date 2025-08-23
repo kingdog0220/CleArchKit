@@ -1,4 +1,4 @@
-using BlazorWasmTemplate.Domain.Entities;
+using BlazorWasmTemplate.Domain.Users.Entities;
 
 namespace BlazorWasmTemplate.Application.Users.Services
 {

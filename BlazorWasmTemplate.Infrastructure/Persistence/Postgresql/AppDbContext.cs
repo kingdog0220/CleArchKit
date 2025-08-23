@@ -1,4 +1,4 @@
-using BlazorWasmTemplate.Domain.Entities;
+using BlazorWasmTemplate.Domain.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWasmTemplate.Infrastructure.Persistence.Postgresql

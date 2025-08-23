@@ -1,6 +1,6 @@
-using BlazorWasmTemplate.Domain.Entities;
+using BlazorWasmTemplate.Domain.Users.Entities;
 
-namespace BlazorWasmTemplate.Domain.Repositories
+namespace BlazorWasmTemplate.Domain.Users.Repositories
 {
     public interface IUserRepository
     {

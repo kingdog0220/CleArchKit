@@ -1,6 +1,6 @@
 using BlazorWasmTemplate.Application.Users.Cache;
-using BlazorWasmTemplate.Domain.Entities;
-using BlazorWasmTemplate.Domain.Repositories;
+using BlazorWasmTemplate.Domain.Users.Entities;
+using BlazorWasmTemplate.Domain.Users.Repositories;
 
 namespace BlazorWasmTemplate.Application.Users.Services
 {
