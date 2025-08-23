@@ -3,7 +3,7 @@ using BlazorWasmTemplate.Domain.Users.Repositories;
 using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorWasmTemplate.Infrastructure.Persistence.Repositories
+namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories
 {
     public class UserRepository : IUserRepository
     {
