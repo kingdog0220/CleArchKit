@@ -1,6 +1,6 @@
 using BlazorWasmTemplate.Domain.Entities;
 
-namespace BlazorWasmTemplate.Application.Services
+namespace BlazorWasmTemplate.Application.Users.Services
 {
     public interface IUserService
     {

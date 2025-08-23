@@ -1,6 +1,6 @@
 using BlazorWasmTemplate.Domain.Entities;
 
-namespace BlazorWasmTemplate.Application.Cache
+namespace BlazorWasmTemplate.Application.Users.Cache
 {
     public interface IUserCache
     {

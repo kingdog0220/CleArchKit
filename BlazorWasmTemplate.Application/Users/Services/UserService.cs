@@ -1,8 +1,8 @@
-using BlazorWasmTemplate.Application.Cache;
+using BlazorWasmTemplate.Application.Users.Cache;
 using BlazorWasmTemplate.Domain.Entities;
 using BlazorWasmTemplate.Domain.Repositories;
 
-namespace BlazorWasmTemplate.Application.Services
+namespace BlazorWasmTemplate.Application.Users.Services
 {
     public class UserService : IUserService
     {

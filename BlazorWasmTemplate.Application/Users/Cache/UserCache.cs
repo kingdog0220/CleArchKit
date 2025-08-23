@@ -2,7 +2,7 @@ using BlazorWasmTemplate.Domain.Entities;
 using BlazorWasmTemplate.Domain.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BlazorWasmTemplate.Application.Cache
+namespace BlazorWasmTemplate.Application.Users.Cache
 {
     public class UserCache : IUserCache
     {
