@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorWasmTemplate.Migrations
+namespace BlazorWasmTemplate.Migrations.Postgresql
 {
     /// <summary>
     /// dotnet ef コマンド実行時に DbContext を生成するためのファクトリ

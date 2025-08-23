@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BlazorWasmTemplate.Migrations.Migrations
+namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 {
     /// <inheritdoc />
     public partial class CreateUser : Migration

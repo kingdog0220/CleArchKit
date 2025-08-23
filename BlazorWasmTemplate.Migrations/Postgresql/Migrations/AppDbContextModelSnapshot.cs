@@ -3,20 +3,17 @@ using System;
 using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BlazorWasmTemplate.Migrations.Migrations
+namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250809053938_CreateUser")]
-    partial class CreateUser
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
