@@ -1,4 +1,5 @@
 using BlazorWasmTemplate.Domain.Users.Entities;
+using BlazorWasmTemplate.Infrastructure.Persistence.Users.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWasmTemplate.Infrastructure.Persistence.Postgresql
@@ -28,32 +29,21 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Postgresql
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("tpl");
 
-            // すべてのエンティティのテーブル名を小文字に変換
+            // 全テーブル・全カラムを小文字に変換
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                // テーブル名を小文字に設定
-                var tableName = entity.GetTableName();
-                if (tableName != null)
-                {
-                    entity.SetTableName(tableName.ToLower());
-                }
+                // テーブル名
+                entity.SetTableName(entity.GetTableName()?.ToLowerInvariant());
 
-                // カラム名も小文字にする
+                // カラム名
                 foreach (var property in entity.GetProperties())
                 {
-                    if (property != null)
-                    {
-                        property.SetColumnName(property.GetColumnName().ToLower());
-                    }
+                    property.SetColumnName(property.Name.ToLowerInvariant());
                 }
             }
 
-            // Fluent API設定が必要であればここで行う
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasIndex(e => e.Code)
-                    .IsUnique();
-            });
+            // Fluent API
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
     }
 }
