@@ -20,19 +20,16 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Configurations
 
             // 主キー
             builder.HasKey(u => u.Id);
-            builder.Property(u => u.Id)
-                .HasColumnName("id");
+            builder.Property(u => u.Id);
 
             // Code
             builder.Property(u => u.Code)
                 .IsRequired()
-                .HasMaxLength(10)
-                .HasColumnName("code");
+                .HasMaxLength(10);
 
             // Name
             builder.Property(u => u.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
+                .HasMaxLength(50);
 
             // IsActive
             builder.Property(u => u.IsActive)

@@ -29,12 +29,9 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Postgresql
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("tpl");
 
-            // 全テーブル・全カラムを小文字に変換
+            // 全カラム名を小文字に変換
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                // テーブル名
-                entity.SetTableName(entity.GetTableName()?.ToLowerInvariant());
-
                 // カラム名
                 foreach (var property in entity.GetProperties())
                 {

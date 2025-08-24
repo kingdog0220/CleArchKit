@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace BlazorWasmTemplate.Domain.Users.Entities
 {
     /// <summary>
