@@ -4,15 +4,24 @@ using BlazorWasmTemplate.Domain.Users.Events;
 
 namespace BlazorWasmTemplate.Application.Users.Events
 {
+    /// <inheritdoc/>
     public class UserUpdatedEventHandler : IEventHandler<UserUpdatedEvent>
     {
+        /// <summary>
+        /// ユーザーキャッシュ
+        /// </summary>
         private readonly IUserCache _cache;
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="cache"></param>
         public UserUpdatedEventHandler(IUserCache cache)
         {
             _cache = cache;
         }
 
+        /// <inheritdoc/>
         public async Task Handle(UserUpdatedEvent @event)
         {
             // キャッシュ更新
