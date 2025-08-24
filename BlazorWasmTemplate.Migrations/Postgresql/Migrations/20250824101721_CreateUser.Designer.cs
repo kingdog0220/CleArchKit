@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250809053938_CreateUser")]
+    [Migration("20250824101721_CreateUser")]
     partial class CreateUser
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BlazorWasmTemplate.Domain.Entities.User", b =>
+            modelBuilder.Entity("BlazorWasmTemplate.Domain.Users.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
-                        .HasColumnName("isactive");
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)

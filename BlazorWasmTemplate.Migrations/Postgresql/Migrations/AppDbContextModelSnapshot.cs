@@ -23,7 +23,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BlazorWasmTemplate.Domain.Entities.User", b =>
+            modelBuilder.Entity("BlazorWasmTemplate.Domain.Users.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
-                        .HasColumnName("isactive");
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)

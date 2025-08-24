@@ -29,7 +29,8 @@ namespace BlazorWasmTemplate.Migrations
                 {
                     var connectionString = configuration.GetConnectionString("DefaultConnection");
                     services.AddDbContext<AppDbContext>(options =>
-                        options.UseNpgsql(connectionString));
+                        options.UseNpgsql(connectionString,
+                        b => b.MigrationsAssembly("BlazorWasmTemplate.Migrations")));
                 })
                 .Build();
 
