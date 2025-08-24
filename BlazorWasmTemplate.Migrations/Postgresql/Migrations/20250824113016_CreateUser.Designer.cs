@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250824101721_CreateUser")]
+    [Migration("20250824113016_CreateUser")]
     partial class CreateUser
     {
         /// <inheritdoc />
