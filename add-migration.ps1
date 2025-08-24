@@ -12,7 +12,10 @@ if (-not $MigrationName) {
 $projectDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $migrationsProject = Join-Path $projectDir "BlazorWasmTemplate.Migrations"
 
-dotnet ef migrations add $MigrationName --project $migrationsProject
+# 出力先ディレクトリ（プロジェクト内の相対パス）
+$outputDir = "Postgresql\Migrations"
+
+dotnet ef migrations add $MigrationName --project $migrationsProject --output-dir $outputDir
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Migration creation failed."
