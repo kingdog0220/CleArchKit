@@ -8,7 +8,7 @@ namespace BlazorWasmTemplate.Domain.Users.Entities
         /// <summary>
         /// 物理ID
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
 
         /// <summary>
         /// コード
@@ -24,5 +24,25 @@ namespace BlazorWasmTemplate.Domain.Users.Entities
         /// 有効/無効フラグ
         /// </summary>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <remarks>ORM用</remarks>
+        protected User() { }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <param name="isActive"></param> <summary>
+        public User(string code, string? name, bool isActive = true)
+        {
+            Id = Guid.NewGuid();
+            Code = code;
+            Name = name;
+            IsActive = isActive;
+        }
     }
 }

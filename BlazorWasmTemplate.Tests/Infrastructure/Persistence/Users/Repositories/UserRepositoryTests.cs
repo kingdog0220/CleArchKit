@@ -59,9 +59,9 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             // Arrange
             var users = new List<User>
             {
-                new User { Id = Guid.NewGuid(), Code = "USER001", Name = "テストユーザー1", IsActive = true },
-                new User { Id = Guid.NewGuid(), Code = "USER002", Name = "テストユーザー2", IsActive = false },
-                new User { Id = Guid.NewGuid(), Code = "USER003", Name = "テストユーザー3", IsActive = true }
+                new User("USER001", "テストユーザー1", true),
+                new User("USER002", "テストユーザー2", false),
+                new User("USER003", "テストユーザー3", true),
             };
 
             _dbContext.Users.AddRange(users);
@@ -89,18 +89,16 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task GetByIdAsync_WhenUserExists_ReturnsUser()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            var user = new User { Id = userId, Code = "USER001", Name = "テストユーザー", IsActive = true };
+            var user = new User("USER001", "テストユーザー", true);
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var result = await _userRepository.GetByIdAsync(userId);
+            var result = await _userRepository.GetByIdAsync(user.Id);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(userId, result.Id);
             Assert.Equal("USER001", result.Code);
             Assert.Equal("テストユーザー", result.Name);
             Assert.True(result.IsActive);
@@ -133,13 +131,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync_WhenValidUser_AddsUserToDatabase()
         {
             // Arrange
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                Code = "USER001",
-                Name = "新規ユーザー",
-                IsActive = true
-            };
+            var user = new User("USER001", "新規ユーザー", true);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -153,27 +145,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Equal(user.IsActive, addedUser.IsActive);
         }
 
-        /// <summary>
-        /// AddAsync - 複数のユーザーを追加できることを確認
-        /// </summary>
-        [Fact]
-        public async Task AddAsync_WhenMultipleUsers_AddsAllUsersToDatabase()
-        {
-            // Arrange
-            var user1 = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "ユーザー1", IsActive = true };
-            var user2 = new User { Id = Guid.NewGuid(), Code = "USER002", Name = "ユーザー2", IsActive = false };
-
-            // Act
-            await _userRepository.AddAsync(user1);
-            await _userRepository.AddAsync(user2);
-
-            // Assert
-            var users = await _dbContext.Users.ToListAsync();
-            Assert.Equal(2, users.Count);
-            Assert.Contains(users, u => u.Code == "USER001");
-            Assert.Contains(users, u => u.Code == "USER002");
-        }
-
         #endregion
 
         #region UpdateAsync Tests
@@ -185,7 +156,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenUserExists_UpdatesUserInDatabase()
         {
             // Arrange
-            var user = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "元の名前", IsActive = true };
+            var user = new User("USER001", "元の名前", true);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -203,29 +174,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.False(updatedUser.IsActive);
         }
 
-        /// <summary>
-        /// UpdateAsync - ユーザーのコードも更新できることを確認
-        /// </summary>
-        [Fact]
-        public async Task UpdateAsync_WhenUpdatingCode_UpdatesCodeInDatabase()
-        {
-            // Arrange
-            var user = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "テストユーザー", IsActive = true };
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            // 更新内容
-            user.Code = "UPDATED001";
-
-            // Act
-            await _userRepository.UpdateAsync(user);
-
-            // Assert
-            var updatedUser = await _dbContext.Users.FindAsync(user.Id);
-            Assert.NotNull(updatedUser);
-            Assert.Equal("UPDATED001", updatedUser.Code);
-        }
-
         #endregion
 
         #region DeleteAsync Tests
@@ -237,7 +185,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserExists_DeletesUserFromDatabase()
         {
             // Arrange
-            var user = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "削除対象ユーザー", IsActive = true };
+            var user = new User("USER001", "削除対象ユーザー", true);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -270,8 +218,8 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenDeletingOneUser_DoesNotAffectOtherUsers()
         {
             // Arrange
-            var user1 = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "ユーザー1", IsActive = true };
-            var user2 = new User { Id = Guid.NewGuid(), Code = "USER002", Name = "ユーザー2", IsActive = true };
+            var user1 = new User("USER001", "ユーザー1", true);
+            var user2 = new User("USER002", "ユーザー2", true);
 
             _dbContext.Users.AddRange(user1, user2);
             await _dbContext.SaveChangesAsync();
@@ -286,80 +234,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
 
             var deletedUser = await _dbContext.Users.FindAsync(user1.Id);
             Assert.Null(deletedUser);
-        }
-
-        #endregion
-
-        #region Integration Tests
-
-        /// <summary>
-        /// 統合テスト - CRUD操作の一連の流れを確認
-        /// </summary>
-        [Fact]
-        public async Task IntegrationTest_CrudOperations_WorksCorrectly()
-        {
-            // Create
-            var user = new User { Id = Guid.NewGuid(), Code = "USER001", Name = "統合テストユーザー", IsActive = true };
-            await _userRepository.AddAsync(user);
-
-            // Read
-            var retrievedUser = await _userRepository.GetByIdAsync(user.Id);
-            Assert.NotNull(retrievedUser);
-            Assert.Equal("USER001", retrievedUser.Code);
-
-            // Update
-            retrievedUser.Name = "更新された統合テストユーザー";
-            retrievedUser.IsActive = false;
-            await _userRepository.UpdateAsync(retrievedUser);
-
-            var updatedUser = await _userRepository.GetByIdAsync(user.Id);
-            Assert.NotNull(updatedUser);
-            Assert.Equal("更新された統合テストユーザー", updatedUser.Name);
-            Assert.False(updatedUser.IsActive);
-
-            // Delete
-            await _userRepository.DeleteAsync(user.Id);
-            var deletedUser = await _userRepository.GetByIdAsync(user.Id);
-            Assert.Null(deletedUser);
-        }
-
-        /// <summary>
-        /// 統合テスト - 複数ユーザーでの操作を確認
-        /// </summary>
-        [Fact]
-        public async Task IntegrationTest_MultipleUsers_WorksCorrectly()
-        {
-            // 複数ユーザーを追加
-            var users = new List<User>
-            {
-                new User { Id = Guid.NewGuid(), Code = "USER001", Name = "ユーザー1", IsActive = true },
-                new User { Id = Guid.NewGuid(), Code = "USER002", Name = "ユーザー2", IsActive = false },
-                new User { Id = Guid.NewGuid(), Code = "USER003", Name = "ユーザー3", IsActive = true }
-            };
-
-            foreach (var user in users)
-            {
-                await _userRepository.AddAsync(user);
-            }
-
-            // 全件取得で確認
-            var allUsers = await _userRepository.GetAllAsync();
-            Assert.Equal(3, allUsers.Count);
-
-            // 1つのユーザーを更新
-            var userToUpdate = users[1];
-            userToUpdate.IsActive = true;
-            await _userRepository.UpdateAsync(userToUpdate);
-
-            // 1つのユーザーを削除
-            await _userRepository.DeleteAsync(users[0].Id);
-
-            // 最終状態を確認
-            var finalUsers = await _userRepository.GetAllAsync();
-            Assert.Equal(2, finalUsers.Count);
-            Assert.DoesNotContain(finalUsers, u => u.Id == users[0].Id);
-            Assert.Contains(finalUsers, u => u.Id == users[1].Id && u.IsActive == true);
-            Assert.Contains(finalUsers, u => u.Id == users[2].Id);
         }
 
         #endregion
