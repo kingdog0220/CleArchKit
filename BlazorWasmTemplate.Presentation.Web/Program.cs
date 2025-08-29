@@ -2,9 +2,11 @@ using System.Diagnostics;
 using BlazorWasmTemplate.Application.Users.Cache;
 using BlazorWasmTemplate.Application.Users.Events;
 using BlazorWasmTemplate.Domain.Events;
+using BlazorWasmTemplate.Domain.Persistence;
 using BlazorWasmTemplate.Domain.Users.Events;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 using BlazorWasmTemplate.Infrastructure.Events;
+using BlazorWasmTemplate.Infrastructure.Persistence;
 using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 using BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories;
 using BlazorWasmTemplate.Presentation.Web.Components;
@@ -43,6 +45,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Repository
+builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Cache
@@ -66,7 +69,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
