@@ -38,7 +38,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("createdat");
+                        .HasColumnName("created_at");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
@@ -51,7 +51,7 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updatedat");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 

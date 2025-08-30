@@ -36,6 +36,15 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Configurations
                 .IsRequired()
                 .HasColumnName("is_active");
 
+            // CreatedAt
+            builder.Property(u => u.CreatedAt)
+            .HasColumnName("created_at");
+
+            // UpdatedAt
+            builder.Property(u => u.UpdatedAt)
+            .HasColumnName("updated_at");
+
+
             //ユニークキー制約
             builder.HasIndex(u => u.Code).IsUnique();
         }
