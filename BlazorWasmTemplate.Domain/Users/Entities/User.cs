@@ -28,6 +28,18 @@ namespace BlazorWasmTemplate.Domain.Users.Entities
         public bool IsActive { get; set; }
 
         /// <summary>
+        /// 作成日時
+        /// </summary>
+
+        public DateTime? CreatedAt { get; set; }
+
+        /// <summary>
+        /// 更新日時
+        /// </summary>
+
+        public DateTime? UpdatedAt { get; set; }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <remarks>ORM用</remarks>
@@ -39,12 +51,14 @@ namespace BlazorWasmTemplate.Domain.Users.Entities
         /// <param name="code"></param>
         /// <param name="name"></param>
         /// <param name="isActive"></param> <summary>
-        public User(string code, string? name, bool isActive = true)
+        public User(Guid id, string code, string? name, bool isActive, DateTime? createdAt, DateTime? updatedAt)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Code = code;
             Name = name;
             IsActive = isActive;
+            CreatedAt = createdAt;
+            UpdatedAt = updatedAt;
         }
 
         /// <summary>

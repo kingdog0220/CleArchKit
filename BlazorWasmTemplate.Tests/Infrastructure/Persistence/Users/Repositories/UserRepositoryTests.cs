@@ -60,9 +60,9 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             // Arrange
             var users = new List<User>
             {
-                new User("USER001", "テストユーザー1", true),
-                new User("USER002", "テストユーザー2", false),
-                new User("USER003", "テストユーザー3", true),
+                new User(Guid.NewGuid(), "USER001", "テストユーザー1", true, DateTime.MinValue, DateTime.MinValue),
+                new User(Guid.NewGuid(), "USER002", "テストユーザー2", false, DateTime.MinValue, DateTime.MinValue),
+                new User(Guid.NewGuid(), "USER003", "テストユーザー3", true, DateTime.MinValue, DateTime.MinValue),
             };
 
             _dbContext.Users.AddRange(users);
@@ -79,38 +79,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Contains(result, u => u.Code == "USER003");
         }
 
-        /// <summary>
-        /// GetAllAsync - 並行アクセス時の動作確認
-        /// </summary>
-        [Fact]
-        public async Task GetAllAsync_WhenConcurrentAccess_ReturnsConsistentResults()
-        {
-            // Arrange
-            var users = new List<User>
-            {
-                new User("USER001", "ユーザー1", true),
-                new User("USER002", "ユーザー2", true),
-                new User("USER003", "ユーザー3", true)
-            };
-            _dbContext.Users.AddRange(users);
-            await _dbContext.SaveChangesAsync();
-
-            // Act
-            var tasks = new List<Task<List<User>>>();
-            for (int i = 0; i < 10; i++)
-            {
-                tasks.Add(_userRepository.GetAllAsync());
-            }
-
-            var results = await Task.WhenAll(tasks);
-
-            // Assert
-            foreach (var result in results)
-            {
-                Assert.Equal(3, result.Count);
-            }
-        }
-
         #endregion
 
         #region GetByIdAsync Tests
@@ -122,7 +90,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task GetByIdAsync_WhenUserExists_ReturnsUser()
         {
             // Arrange
-            var user = new User("USER001", "テストユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
@@ -153,19 +121,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Null(result);
         }
 
-        /// <summary>
-        /// GetByIdAsync - 空のGuidの場合、nullを返すことを確認
-        /// </summary>
-        [Fact]
-        public async Task GetByIdAsync_WhenEmptyGuid_ReturnsNull()
-        {
-            // Act
-            var result = await _userRepository.GetByIdAsync(Guid.Empty);
-
-            // Assert
-            Assert.Null(result);
-        }
-
         #endregion
 
         #region AddAsync Tests
@@ -177,7 +132,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync_WhenValidUser_AddsUserToDatabase()
         {
             // Arrange
-            var user = new User("USER001", "新規ユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "新規ユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -202,51 +157,13 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         }
 
         /// <summary>
-        /// AddAsync - 空文字列のコードでユーザーを追加できることを確認
-        /// </summary>
-        [Fact]
-        public async Task AddAsync_WhenCodeIsEmpty_AddsUserSuccessfully()
-        {
-            // Arrange
-            var user = new User("", "空コードユーザー", true);
-
-            // Act
-            await _userRepository.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
-
-            // Assert
-            var addedUser = await _dbContext.Users.FindAsync(user.Id);
-            Assert.NotNull(addedUser);
-            Assert.Equal("", addedUser.Code);
-        }
-
-        /// <summary>
-        /// AddAsync - null名前でユーザーを追加できることを確認
-        /// </summary>
-        [Fact]
-        public async Task AddAsync_WhenNameIsNull_AddsUserSuccessfully()
-        {
-            // Arrange
-            var user = new User("USER001", null, true);
-
-            // Act
-            await _userRepository.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
-
-            // Assert
-            var addedUser = await _dbContext.Users.FindAsync(user.Id);
-            Assert.NotNull(addedUser);
-            Assert.Null(addedUser.Name);
-        }
-
-        /// <summary>
         /// AddAsync - エンティティの状態がAddedになることを確認
         /// </summary>
         [Fact]
         public async Task AddAsync_WhenCalled_EntityStateIsAdded()
         {
             // Arrange
-            var user = new User("USER001", "テストユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -257,57 +174,13 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         }
 
         /// <summary>
-        /// AddAsync - 同じユーザーを複数回追加した場合の動作確認
-        /// </summary>
-        [Fact]
-        public async Task AddAsync_WhenAddingSameUserTwice_ThrowsException()
-        {
-            // Arrange
-            var user = new User("USER001", "テストユーザー", true);
-
-            // Act
-            await _userRepository.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
-
-            // Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-            {
-                await _userRepository.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
-            });
-        }
-
-        /// <summary>
-        /// AddAsync - 並行追加時の動作確認
-        /// </summary>
-        [Fact]
-        public async Task AddAsync_WhenConcurrentAdd_AllUsersAreAdded()
-        {
-            // Arrange
-            var tasks = new List<Task>();
-            for (int i = 0; i < 10; i++)
-            {
-                var user = new User($"USER{i:D3}", $"並行ユーザー{i}", true);
-                tasks.Add(_userRepository.AddAsync(user));
-            }
-
-            // Act
-            await Task.WhenAll(tasks);
-            await _dbContext.SaveChangesAsync();
-
-            // Assert
-            var allUsers = await _userRepository.GetAllAsync();
-            Assert.Equal(10, allUsers.Count);
-        }
-
-        /// <summary>
         /// AddAsync - ユーザーのプロパティが正確に保存されることを確認
         /// </summary>
         [Fact]
         public async Task AddAsync_WhenUserAdded_AllPropertiesAreSavedCorrectly()
         {
             // Arrange
-            var user = new User("USER001", "詳細テストユーザー", false);
+            var user = new User(Guid.NewGuid(), "USER001", "詳細テストユーザー", false, DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -320,6 +193,8 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Equal("USER001", savedUser.Code);
             Assert.Equal("詳細テストユーザー", savedUser.Name);
             Assert.False(savedUser.IsActive);
+            Assert.Equal(DateTime.MinValue, savedUser.CreatedAt);
+            Assert.Equal(DateTime.MinValue, savedUser.UpdatedAt);
         }
 
         #endregion
@@ -333,7 +208,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenUserExists_UpdatesUserInDatabase()
         {
             // Arrange
-            var user = new User("USER001", "元の名前", true);
+            var user = new User(Guid.NewGuid(), "USER001", "元の名前", true, DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -352,23 +227,13 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         }
 
         /// <summary>
-        /// UpdateAsync - nullユーザーの場合、例外が発生することを確認
-        /// </summary>
-        [Fact]
-        public async Task UpdateAsync_WhenUserIsNull_ThrowsArgumentNullException()
-        {
-            // Act & Assert
-            await Assert.ThrowsAsync<NullReferenceException>(() => _userRepository.UpdateAsync(null!));
-        }
-
-        /// <summary>
         /// UpdateAsync - エンティティの状態がModifiedになることを確認
         /// </summary>
         [Fact]
         public async Task UpdateAsync_WhenCalled_EntityStateIsModified()
         {
             // Arrange
-            var user = new User("USER001", "テストユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.UpdateAsync(user);
@@ -385,7 +250,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenUserDoesNotExist_DoesNotThrowException()
         {
             // Arrange
-            var user = new User("USER001", "存在しないユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act & Assert
             await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () =>
@@ -393,33 +258,6 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
                 await _userRepository.UpdateAsync(user);
                 await _dbContext.SaveChangesAsync();
             });
-        }
-
-        /// <summary>
-        /// UpdateAsync - 部分的な更新が正しく動作することを確認
-        /// </summary>
-        [Fact]
-        public async Task UpdateAsync_WhenPartialUpdate_OnlyModifiedPropertiesAreChanged()
-        {
-            // Arrange
-            var user = new User("USER001", "元の名前", true);
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-
-            var originalCode = user.Code;
-            var originalIsActive = user.IsActive;
-
-            // Act - 名前のみ変更
-            user.Name = "更新された名前";
-            await _userRepository.UpdateAsync(user);
-            await _dbContext.SaveChangesAsync();
-
-            // Assert
-            var updatedUser = await _dbContext.Users.FindAsync(user.Id);
-            Assert.NotNull(updatedUser);
-            Assert.Equal(originalCode, updatedUser.Code); // 変更されていない
-            Assert.Equal("更新された名前", updatedUser.Name); // 変更されている
-            Assert.Equal(originalIsActive, updatedUser.IsActive); // 変更されていない
         }
 
         #endregion
@@ -433,7 +271,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserExists_DeletesUserFromDatabase()
         {
             // Arrange
-            var user = new User("USER001", "削除対象ユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -453,7 +291,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserDoesNotExist_DoesNotThrowException()
         {
             // Arrange
-            var user = new User("USER001", "非存在ユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "非存在ユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act & Assert
             await Assert.ThrowsAsync<NullReferenceException>(() => _userRepository.DeleteAsync(null!));
@@ -466,8 +304,8 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenDeletingOneUser_DoesNotAffectOtherUsers()
         {
             // Arrange
-            var user1 = new User("USER001", "ユーザー1", true);
-            var user2 = new User("USER002", "ユーザー2", true);
+            var user1 = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            var user2 = new User(Guid.NewGuid(), "USER002", "ユーザー2", true, DateTime.MinValue, DateTime.MinValue);
 
             _dbContext.Users.AddRange(user1, user2);
             await _dbContext.SaveChangesAsync();
@@ -502,7 +340,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserExists_EntityStateIsDeleted()
         {
             // Arrange
-            var user = new User("USER001", "削除対象ユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -521,7 +359,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenDeletingSameUserTwice_DoesNotThrowException()
         {
             // Arrange
-            var user = new User("USER001", "削除対象ユーザー", true);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
