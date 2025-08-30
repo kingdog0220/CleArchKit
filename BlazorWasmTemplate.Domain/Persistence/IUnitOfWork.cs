@@ -8,10 +8,11 @@ namespace BlazorWasmTemplate.Domain.Persistence
         /// <summary>
         /// 現在のトランザクション内で行われたすべての変更をデータベースにコミットします。
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns>
         /// データベースに書き込まれた状態エントリの数を表すタスク。
         /// 変更がない場合は0を返します。
         /// </returns>
-        Task<int> CommitAsync();
+        Task<int> CommitAsync(CancellationToken cancellationToken = default);
     }
 }

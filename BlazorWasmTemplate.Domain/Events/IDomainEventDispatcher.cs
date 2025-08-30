@@ -1,15 +1,20 @@
 namespace BlazorWasmTemplate.Domain.Events
 {
     /// <summary>
-    /// ドメインイベントをメモリ内でディスパッチするクラス
+    /// ドメインイベント
+    /// </summary>
+    public interface IDomainEvent { }
+
+    /// <summary>
+    /// ドメインイベントをメモリ内でディスパッチする
     /// </summary>
     public interface IDomainEventDispatcher
     {
         /// <summary>
         /// イベントをディスパッチする
         /// </summary>
-        /// <typeparam name="TEvent">イベントの型</typeparam>
-        /// <param name="event">イベント</param>
-        Task DispatchAsync<TEvent>(TEvent @event) where TEvent : class;
+        /// <param name="domainEvent">イベント</param>
+        /// <param name="cancellationToken"></param>
+        Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
     }
 }

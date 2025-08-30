@@ -22,13 +22,21 @@ namespace BlazorWasmTemplate.Application.Users.Events
         }
 
         /// <inheritdoc/>
-        public async Task Handle(UserUpdatedEvent @event)
+        public async Task HandleAsync(UserUpdatedEvent @event, CancellationToken cancellationToken = default)
         {
-            // キャッシュ更新
-            await _cache.RefreshAsync();
+            try
+            {
+                // キャッシュ更新
+                await _cache.RefreshAsync();
 
-            // ログ出力
-            Console.WriteLine($"[EVENT] User cache refreshed for UserId: {@event.UserId}");
+                // ログ出力
+                Console.WriteLine($"[EVENT] User cache refreshed for UserId: {@event.UserId}");
+            }
+            catch (Exception ex)
+            {
+                // ログ出力
+                Console.WriteLine($"{ex},Failed to refresh user cache. UserId: {@event.UserId}");
+            }
         }
     }
 }

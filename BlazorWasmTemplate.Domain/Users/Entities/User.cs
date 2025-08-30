@@ -1,3 +1,5 @@
+using BlazorWasmTemplate.Domain.Users.Events;
+
 namespace BlazorWasmTemplate.Domain.Users.Entities
 {
     /// <summary>
@@ -43,6 +45,15 @@ namespace BlazorWasmTemplate.Domain.Users.Entities
             Code = code;
             Name = name;
             IsActive = isActive;
+        }
+
+        /// <summary>
+        /// ユーザードメインに関するイベント発行
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        public UserUpdatedEvent PublishUserUpdatedEvent()
+        {
+            return new UserUpdatedEvent(Id);
         }
     }
 }

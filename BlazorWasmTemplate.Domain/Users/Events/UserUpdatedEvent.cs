@@ -1,9 +1,11 @@
+using BlazorWasmTemplate.Domain.Events;
+
 namespace BlazorWasmTemplate.Domain.Users.Events
 {
     /// <summary>
     /// ユーザー更新イベント
     /// </summary>
-    public class UserUpdatedEvent
+    public class UserUpdatedEvent : IDomainEvent
     {
         /// <summary>
         /// 物理ID
