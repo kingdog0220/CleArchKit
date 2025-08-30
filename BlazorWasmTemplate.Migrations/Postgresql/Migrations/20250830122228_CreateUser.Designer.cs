@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250824113016_CreateUser")]
+    [Migration("20250830122228_CreateUser")]
     partial class CreateUser
     {
         /// <inheritdoc />
@@ -39,6 +39,10 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
                         .HasColumnType("character varying(10)")
                         .HasColumnName("code");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdat");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
@@ -47,6 +51,10 @@ namespace BlazorWasmTemplate.Migrations.Postgresql.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatedat");
 
                     b.HasKey("Id");
 
