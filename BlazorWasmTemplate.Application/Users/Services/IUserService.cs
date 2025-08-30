@@ -35,7 +35,7 @@ namespace BlazorWasmTemplate.Application.Users.Services
         /// <summary>
         /// ユーザー削除
         /// </summary>
-        /// <param name="id">物理ID</param>
-        Task DeleteAsync(Guid id);
+        /// <param name="user"></param>
+        Task DeleteAsync(User user);
     }
 }

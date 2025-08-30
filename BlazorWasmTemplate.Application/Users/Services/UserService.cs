@@ -1,7 +1,6 @@
 using BlazorWasmTemplate.Application.Users.Cache;
-using BlazorWasmTemplate.Domain.Events;
+using BlazorWasmTemplate.Domain.Persistence;
 using BlazorWasmTemplate.Domain.Users.Entities;
-using BlazorWasmTemplate.Domain.Users.Events;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 
 namespace BlazorWasmTemplate.Application.Users.Services
@@ -20,21 +19,21 @@ namespace BlazorWasmTemplate.Application.Users.Services
         private readonly IUserCache _cache;
 
         /// <summary>
-        /// ドメインイベントをメモリ内でディスパッチするクラス
+        /// nit of Workパターンを実装するインターフェース
         /// </summary>
-        private readonly IDomainEventDispatcher _dispatcher;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userRepository"></param>
         /// <param name="userCache"></param>
-        /// <param name="dispatcher"></param>
-        public UserService(IUserRepository userRepository, IUserCache userCache, IDomainEventDispatcher dispatcher)
+        /// <param name="unitOfWork"></param>
+        public UserService(IUserRepository userRepository, IUserCache userCache, IUnitOfWork unitOfWork)
         {
             _repository = userRepository;
             _cache = userCache;
-            _dispatcher = dispatcher;
+            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
@@ -52,22 +51,31 @@ namespace BlazorWasmTemplate.Application.Users.Services
         /// <inheritdoc/>
         public async Task AddAsync(User user)
         {
+            var domainEvent = user.PublishUserUpdatedEvent();
             await _repository.AddAsync(user);
-            await _dispatcher.DispatchAsync(new UserUpdatedEvent(user.Id));
+
+            _unitOfWork.EnqueueEvent(domainEvent);
+            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
         public async Task UpdateAsync(User user)
         {
+            var domainEvent = user.PublishUserUpdatedEvent();
             await _repository.UpdateAsync(user);
-            await _dispatcher.DispatchAsync(new UserUpdatedEvent(user.Id));
+
+            _unitOfWork.EnqueueEvent(domainEvent);
+            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(User user)
         {
-            await _repository.DeleteAsync(id);
-            await _dispatcher.DispatchAsync(new UserUpdatedEvent(id));
+            var domainEvent = user.PublishUserUpdatedEvent();
+            await _repository.DeleteAsync(user);
+
+            _unitOfWork.EnqueueEvent(domainEvent);
+            await _unitOfWork.CommitAsync();
         }
 
     }

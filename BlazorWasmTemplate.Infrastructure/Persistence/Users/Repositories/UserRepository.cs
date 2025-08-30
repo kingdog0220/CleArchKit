@@ -38,25 +38,26 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync(User user)
         {
             _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public async Task UpdateAsync(User user)
         {
             _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(User user)
         {
-            var user = await _dbContext.Users.FindAsync(id);
-            if (user != null)
+            var deleteUser = await _dbContext.Users.FindAsync(user.Id);
+            if (deleteUser != null)
             {
-                _dbContext.Users.Remove(user);
-                await _dbContext.SaveChangesAsync();
+                _dbContext.Users.Remove(deleteUser);
             }
+
+            await Task.CompletedTask;
         }
 
     }
