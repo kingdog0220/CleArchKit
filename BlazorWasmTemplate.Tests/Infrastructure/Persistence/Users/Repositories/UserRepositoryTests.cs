@@ -447,7 +447,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         }
 
         /// <summary>
-        /// DeleteAsync - 存在しないIDの場合、例外が発生しないことを確認
+        /// DeleteAsync - 存在しないIDの場合、例外が発生することを確認
         /// </summary>
         [Fact]
         public async Task DeleteAsync_WhenUserDoesNotExist_DoesNotThrowException()
@@ -456,8 +456,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             var user = new User("USER001", "非存在ユーザー", true);
 
             // Act & Assert
-            var exception = await Record.ExceptionAsync(() => _userRepository.DeleteAsync(user));
-            Assert.Null(exception);
+            await Assert.ThrowsAsync<NullReferenceException>(() => _userRepository.DeleteAsync(null!));
         }
 
         /// <summary>
@@ -530,13 +529,12 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             await _userRepository.DeleteAsync(user);
             await _dbContext.SaveChangesAsync();
 
-            // Assert - 2回目の削除でも例外が発生しないこと
-            var exception = await Record.ExceptionAsync(async () =>
+            // Assert - 2回目の削除は例外が発生する
+            await Assert.ThrowsAsync<NullReferenceException>(async () =>
             {
                 await _userRepository.DeleteAsync(user);
                 await _dbContext.SaveChangesAsync();
             });
-            Assert.Null(exception);
         }
 
         #endregion
