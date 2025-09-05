@@ -41,5 +41,11 @@ namespace BlazorWasmTemplate.Infrastructure.Events
             }
             _eventBuffers.Clear();
         }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            _eventBuffers.Clear();
+        }
     }
 }

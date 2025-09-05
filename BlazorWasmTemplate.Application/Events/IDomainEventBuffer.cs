@@ -19,5 +19,10 @@ namespace BlazorWasmTemplate.Application.Events
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task FlushAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// ドメインイベントを初期化する
+        /// </summary>
+        void Clear();
     }
 }

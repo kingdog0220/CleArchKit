@@ -50,6 +50,7 @@ namespace BlazorWasmTemplate.Application.Expands
             }
             catch (Exception ex)
             {
+                _eventBuffer.Clear();
                 Console.WriteLine(ex);
                 throw;
             }
