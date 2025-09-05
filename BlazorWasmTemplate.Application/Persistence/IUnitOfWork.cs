@@ -16,11 +16,5 @@ namespace BlazorWasmTemplate.Application.Persistence
         /// 変更がない場合は0を返します。
         /// </returns>
         Task<int> CommitAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// ドメインイベントをキューに積む
-        /// </summary>
-        /// <param name="domainEvent"></param>
-        void EnqueueEvent(IDomainEvent domainEvent);
     }
 }

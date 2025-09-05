@@ -51,30 +51,21 @@ namespace BlazorWasmTemplate.Application.Users.Services
         /// <inheritdoc/>
         public async Task AddAsync(User user)
         {
-            var domainEvent = user.PublishUserUpdatedEvent();
             await _repository.AddAsync(user);
-
-            _unitOfWork.EnqueueEvent(domainEvent);
             await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
         public async Task UpdateAsync(User user)
         {
-            var domainEvent = user.PublishUserUpdatedEvent();
             await _repository.UpdateAsync(user);
-
-            _unitOfWork.EnqueueEvent(domainEvent);
             await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
         public async Task DeleteAsync(User user)
         {
-            var domainEvent = user.PublishUserUpdatedEvent();
             await _repository.DeleteAsync(user);
-
-            _unitOfWork.EnqueueEvent(domainEvent);
             await _unitOfWork.CommitAsync();
         }
 
