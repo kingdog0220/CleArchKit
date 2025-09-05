@@ -1,5 +1,5 @@
+using BlazorWasmTemplate.Application.Persistence;
 using BlazorWasmTemplate.Application.Users.Cache;
-using BlazorWasmTemplate.Domain.Persistence;
 using BlazorWasmTemplate.Domain.Users.Entities;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 

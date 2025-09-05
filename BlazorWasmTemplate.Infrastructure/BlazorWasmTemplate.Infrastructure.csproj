@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWasmTemplate.Domain\BlazorWasmTemplate.Domain.csproj" />
+    <ProjectReference Include="..\BlazorWasmTemplate.Application\BlazorWasmTemplate.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 using BlazorWasmTemplate.Domain.Events;
 
-namespace BlazorWasmTemplate.Domain.Persistence
+namespace BlazorWasmTemplate.Application.Persistence
 {
     /// <summary>
     /// Unit of Workパターンを実装するインターフェース

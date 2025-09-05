@@ -1,5 +1,5 @@
+using BlazorWasmTemplate.Application.Persistence;
 using BlazorWasmTemplate.Domain.Events;
-using BlazorWasmTemplate.Domain.Persistence;
 using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 
 namespace BlazorWasmTemplate.Infrastructure.Persistence

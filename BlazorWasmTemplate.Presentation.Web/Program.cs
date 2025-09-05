@@ -1,8 +1,8 @@
 using System.Diagnostics;
+using BlazorWasmTemplate.Application.Persistence;
 using BlazorWasmTemplate.Application.Users.Cache;
 using BlazorWasmTemplate.Application.Users.Events;
 using BlazorWasmTemplate.Domain.Events;
-using BlazorWasmTemplate.Domain.Persistence;
 using BlazorWasmTemplate.Domain.Users.Events;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 using BlazorWasmTemplate.Infrastructure.Events;
@@ -44,8 +44,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repository
+// Transaction
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+// Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Cache
