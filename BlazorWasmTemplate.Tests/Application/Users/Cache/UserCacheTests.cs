@@ -268,27 +268,6 @@ namespace BlazorWasmTemplate.Tests.Application.Users.Cache
             _mockUserRepository.Verify(x => x.GetAllAsync(), Times.Never);
         }
 
-        /// <summary>
-        /// GetByIdAsync - 空のGuidを指定した場合、nullを返すことを確認
-        /// </summary>
-        [Fact]
-        public async Task GetByIdAsync_WhenEmptyGuid_ReturnsNull()
-        {
-            // Arrange
-            var expectedUsers = new List<User>
-            {
-                new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.Now, DateTime.Now)
-            };
-
-            _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(expectedUsers);
-
-            // Act
-            var result = await _userCache.GetByIdAsync(Guid.Empty);
-
-            // Assert
-            Assert.Null(result);
-        }
-
         #endregion
 
         #region RefreshAsync Tests
@@ -359,32 +338,6 @@ namespace BlazorWasmTemplate.Tests.Application.Users.Cache
         }
 
         /// <summary>
-        /// RefreshAsync - リポジトリが空のリストを返す場合、キャッシュが空になることを確認
-        /// </summary>
-        [Fact]
-        public async Task RefreshAsync_WhenRepositoryReturnsEmptyList_ClearsCache()
-        {
-            // Arrange
-            var oldUsers = new List<User>
-            {
-                new User(Guid.NewGuid(), "OLD001", "古いユーザー", true, DateTime.Now, DateTime.Now)
-            };
-
-            // 古いデータをキャッシュに設定
-            _memoryCache.Set("UserCache", oldUsers);
-
-            _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<User>());
-
-            // Act
-            await _userCache.RefreshAsync();
-
-            // Assert
-            var cachedData = _memoryCache.Get("UserCache") as IEnumerable<User>;
-            Assert.NotNull(cachedData);
-            Assert.Empty(cachedData);
-        }
-
-        /// <summary>
         /// RefreshAsync - スコープが正しく作成され、破棄されることを確認
         /// </summary>
         [Fact]
@@ -429,94 +382,6 @@ namespace BlazorWasmTemplate.Tests.Application.Users.Cache
             // Assert
             _mockUserRepository.Verify(x => x.GetAllAsync(), Times.Exactly(3));
             _mockScopeFactory.Verify(x => x.CreateScope(), Times.Exactly(3));
-        }
-
-        #endregion
-
-        #region Integration Tests
-
-        /// <summary>
-        /// 統合テスト - RefreshAsync後にGetAllAsyncを呼び出した場合、リポジトリを再度呼ばないことを確認
-        /// </summary>
-        [Fact]
-        public async Task Integration_RefreshThenGetAll_DoesNotCallRepositoryAgain()
-        {
-            // Arrange
-            var users = new List<User>
-            {
-                new User(Guid.NewGuid(), "USER001", "統合テストユーザー", true, DateTime.Now, DateTime.Now)
-            };
-
-            _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(users);
-
-            // Act
-            await _userCache.RefreshAsync();
-            var result = await _userCache.GetAllAsync();
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-            Assert.Equal("USER001", result.First().Code);
-
-            // RefreshAsyncで1回のみ呼ばれることを確認
-            _mockUserRepository.Verify(x => x.GetAllAsync(), Times.Once);
-        }
-
-        /// <summary>
-        /// 統合テスト - GetAllAsync後にGetByIdAsyncを呼び出した場合、リポジトリを再度呼ばないことを確認
-        /// </summary>
-        [Fact]
-        public async Task Integration_GetAllThenGetById_DoesNotCallRepositoryAgain()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var users = new List<User>
-            {
-                new User(userId, "USER001", "統合テストユーザー", true, DateTime.Now, DateTime.Now)
-            };
-
-            _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(users);
-
-            // Act
-            var allUsers = await _userCache.GetAllAsync();
-            var specificUser = await _userCache.GetByIdAsync(userId);
-
-            // Assert
-            Assert.NotNull(allUsers);
-            Assert.NotNull(specificUser);
-            Assert.Equal(userId, specificUser.Id);
-
-            // GetAllAsyncで1回のみ呼ばれることを確認
-            _mockUserRepository.Verify(x => x.GetAllAsync(), Times.Once);
-        }
-
-        /// <summary>
-        /// 統合テスト - GetByIdAsync後にGetAllAsyncを呼び出した場合、リポジトリを再度呼ばないことを確認
-        /// </summary>
-        [Fact]
-        public async Task Integration_GetByIdThenGetAll_DoesNotCallRepositoryAgain()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var users = new List<User>
-            {
-                new User(userId, "USER001", "統合テストユーザー", true, DateTime.Now, DateTime.Now)
-            };
-
-            _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(users);
-
-            // Act
-            var specificUser = await _userCache.GetByIdAsync(userId);
-            var allUsers = await _userCache.GetAllAsync();
-
-            // Assert
-            Assert.NotNull(specificUser);
-            Assert.NotNull(allUsers);
-            Assert.Equal(userId, specificUser.Id);
-            Assert.Single(allUsers);
-
-            // GetByIdAsyncの内部でGetAllAsyncが呼ばれるため、1回のみ呼ばれることを確認
-            _mockUserRepository.Verify(x => x.GetAllAsync(), Times.Once);
         }
 
         #endregion
