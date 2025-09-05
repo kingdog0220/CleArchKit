@@ -23,17 +23,15 @@ namespace BlazorWasmTemplate.Infrastructure.Events
         /// <inheritdoc/>
         public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            var eventType = domainEvent.GetType();
-            var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
+            var handlerType = typeof(IEventHandler<>).MakeGenericType(domainEvent.GetType());
             var handlers = _serviceProvider.GetServices(handlerType);
-
-            var method = handlerType.GetMethod(nameof(IEventHandler<IDomainEvent>.HandleAsync));
 
             foreach (var handler in handlers)
             {
-                if (method != null)
+                // dynamic を使って型安全に HandleAsync を呼ぶ
+                if (handler != null)
                 {
-                    await (Task)method.Invoke(handler, [domainEvent, cancellationToken])!;
+                    await ((dynamic)handler).HandleAsync((dynamic)domainEvent, cancellationToken);
                 }
             }
         }
