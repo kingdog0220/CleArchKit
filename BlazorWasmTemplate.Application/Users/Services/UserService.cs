@@ -1,4 +1,3 @@
-using BlazorWasmTemplate.Application.Persistence;
 using BlazorWasmTemplate.Application.Users.Cache;
 using BlazorWasmTemplate.Domain.Users.Entities;
 using BlazorWasmTemplate.Domain.Users.Repositories;
@@ -19,21 +18,14 @@ namespace BlazorWasmTemplate.Application.Users.Services
         private readonly IUserCache _cache;
 
         /// <summary>
-        /// nit of Workパターンを実装するインターフェース
-        /// </summary>
-        private readonly IUnitOfWork _unitOfWork;
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userRepository"></param>
         /// <param name="userCache"></param>
-        /// <param name="unitOfWork"></param>
-        public UserService(IUserRepository userRepository, IUserCache userCache, IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, IUserCache userCache)
         {
             _repository = userRepository;
             _cache = userCache;
-            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
@@ -52,21 +44,18 @@ namespace BlazorWasmTemplate.Application.Users.Services
         public async Task AddAsync(User user)
         {
             await _repository.AddAsync(user);
-            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
         public async Task UpdateAsync(User user)
         {
             await _repository.UpdateAsync(user);
-            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
         public async Task DeleteAsync(User user)
         {
             await _repository.DeleteAsync(user);
-            await _unitOfWork.CommitAsync();
         }
 
     }
