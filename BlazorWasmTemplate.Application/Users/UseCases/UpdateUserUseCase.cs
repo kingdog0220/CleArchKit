@@ -3,7 +3,7 @@ using BlazorWasmTemplate.Application.Users.Dtos;
 using BlazorWasmTemplate.Application.Users.Services;
 using BlazorWasmTemplate.Domain.Users.Entities;
 
-namespace BlazorWasmTemplate.Application.Users.UseCase
+namespace BlazorWasmTemplate.Application.Users.UseCases
 {
     /// <summary>
     /// ユーザー更新ユースケース
