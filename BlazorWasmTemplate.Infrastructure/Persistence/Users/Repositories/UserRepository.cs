@@ -25,7 +25,7 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories
         /// <inheritdoc/>
         public async Task<List<User>> GetAllAsync()
         {
-            return await _dbContext.Users.ToListAsync();
+            return await _dbContext.Users.AsNoTracking().ToListAsync();
         }
 
         /// <inheritdoc/>
@@ -56,9 +56,15 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<bool> ExistsByCodeAsync(Guid id, string code)
+        public async Task<bool> ExistsByCodeAsync(string code, Guid? excludeId = null)
         {
-            return await _dbContext.Users.Where(e => e.Id != id && e.Code == code).AsNoTracking().AnyAsync();
+            var query = _dbContext.Users.AsNoTracking().Where(u => u.Code == code);
+
+            if (excludeId.HasValue) {
+                query = query.Where(u => u.Id != excludeId.Value);
+            }
+
+            return await query.AnyAsync();
         }
     }
 }

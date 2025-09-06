@@ -23,9 +23,9 @@ namespace BlazorWasmTemplate.Application.Users.Services
         /// <summary>
         /// コードが存在するかチェックする
         /// </summary>
-        /// <param name="id">物理ID</param>
         /// <param name="code"></param>
+        /// <param name="id">更新時に自分自身を除外するID（登録時は null）</param>
         /// <returns>すでに存在すればTrue</returns>
-        Task<bool> ExistsByCodeAsync(Guid id, string code);
+        Task<bool> ExistsByCodeAsync(string code, Guid? excludeId = null);
     }
 }

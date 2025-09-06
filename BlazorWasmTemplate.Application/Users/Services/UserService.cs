@@ -40,9 +40,10 @@ namespace BlazorWasmTemplate.Application.Users.Services
             return await _cache.GetByIdAsync(id);
         }
 
-        public async Task<bool> ExistsByCodeAsync(Guid id, string code)
+        /// <inheritdoc/>
+        public async Task<bool> ExistsByCodeAsync(string code, Guid? excludeId = null)
         {
-            return await _repository.ExistsByCodeAsync(id, code);
+            return await _repository.ExistsByCodeAsync(code, excludeId);
         }
 
     }

@@ -376,5 +376,61 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         }
 
         #endregion
+
+        #region ExistsByCodeAsync Tests
+
+        /// <summary>
+        /// ExistsByCodeAsync - コードが存在することを確認
+        /// </summary>
+        [Fact]
+        public async Task ExistsByCodeAsync_Exist()
+        {
+            // Arrange
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await _userRepository.ExistsByCodeAsync(user.Code);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        /// <summary>
+        /// ExistsByCodeAsync - コードが存在しないことを確認
+        /// </summary>
+        [Fact]
+        public async Task ExistsByCodeAsync_NoExist()
+        {
+            // Arrange
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+
+            // Act
+            var result = await _userRepository.ExistsByCodeAsync(user.Code);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        /// <summary>
+        /// ExistsByCodeAsync - 自分自身のコードはチェックしないことを確認
+        /// </summary>
+        [Fact]
+        public async Task ExistsByCodeAsync_ExcludeId()
+        {
+            // Arrange
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await _userRepository.ExistsByCodeAsync(user.Code, user.Id);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        #endregion
     }
 }
