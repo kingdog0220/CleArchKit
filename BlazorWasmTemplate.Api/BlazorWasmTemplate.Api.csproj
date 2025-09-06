@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorWasmTemplate.Application\BlazorWasmTemplate.Application.csproj" />
+    <ProjectReference Include="..\BlazorWasmTemplate.Domain\BlazorWasmTemplate.Domain.csproj" />
   </ItemGroup>
 
 </Project>
