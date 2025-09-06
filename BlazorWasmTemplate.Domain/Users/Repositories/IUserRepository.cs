@@ -37,5 +37,13 @@ namespace BlazorWasmTemplate.Domain.Users.Repositories
         /// </summary>
         /// <param name="user"></param>
         Task DeleteAsync(User user);
+
+        /// <summary>
+        /// コードが存在するかチェックする
+        /// </summary>
+        /// <param name="id">物理ID</param>
+        /// <param name="code"></param>
+        /// <returns>すでに存在すればTrue</returns>
+        Task<bool> ExistsByCodeAsync(Guid id, string code);
     }
 }

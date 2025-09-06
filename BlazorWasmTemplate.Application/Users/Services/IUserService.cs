@@ -21,21 +21,11 @@ namespace BlazorWasmTemplate.Application.Users.Services
         Task<User?> GetByIdAsync(Guid id);
 
         /// <summary>
-        /// ユーザー登録
+        /// コードが存在するかチェックする
         /// </summary>
-        /// <param name="user"></param>
-        Task AddAsync(User user);
-
-        /// <summary>
-        /// ユーザー更新
-        /// </summary>
-        /// <param name="user"></param>
-        Task UpdateAsync(User user);
-
-        /// <summary>
-        /// ユーザー削除
-        /// </summary>
-        /// <param name="user"></param>
-        Task DeleteAsync(User user);
+        /// <param name="id">物理ID</param>
+        /// <param name="code"></param>
+        /// <returns>すでに存在すればTrue</returns>
+        Task<bool> ExistsByCodeAsync(Guid id, string code);
     }
 }

@@ -40,22 +40,9 @@ namespace BlazorWasmTemplate.Application.Users.Services
             return await _cache.GetByIdAsync(id);
         }
 
-        /// <inheritdoc/>
-        public async Task AddAsync(User user)
+        public async Task<bool> ExistsByCodeAsync(Guid id, string code)
         {
-            await _repository.AddAsync(user);
-        }
-
-        /// <inheritdoc/>
-        public async Task UpdateAsync(User user)
-        {
-            await _repository.UpdateAsync(user);
-        }
-
-        /// <inheritdoc/>
-        public async Task DeleteAsync(User user)
-        {
-            await _repository.DeleteAsync(user);
+            return await _repository.ExistsByCodeAsync(id, code);
         }
 
     }

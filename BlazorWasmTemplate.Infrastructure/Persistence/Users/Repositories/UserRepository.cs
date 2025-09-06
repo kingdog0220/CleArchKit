@@ -51,16 +51,14 @@ namespace BlazorWasmTemplate.Infrastructure.Persistence.Users.Repositories
         /// <inheritdoc/>
         public async Task DeleteAsync(User user)
         {
-            var deleteUser = await _dbContext.Users.FindAsync(user.Id);
-            if (deleteUser == null)
-            {
-                throw new NullReferenceException($"対象のユーザーは存在しません。UserId:{user.Id}");
-            }
-
-            _dbContext.Users.Remove(deleteUser);
-
+            _dbContext.Users.Remove(user);
             await Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
+        public async Task<bool> ExistsByCodeAsync(Guid id, string code)
+        {
+            return await _dbContext.Users.Where(e => e.Id != id && e.Code == code).AsNoTracking().AnyAsync();
+        }
     }
 }
