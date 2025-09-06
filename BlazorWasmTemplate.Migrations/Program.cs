@@ -1,8 +1,5 @@
 using BlazorWasmTemplate.Infrastructure.Persistence.Postgresql;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 
 namespace BlazorWasmTemplate.Migrations
 {
@@ -10,19 +7,9 @@ namespace BlazorWasmTemplate.Migrations
     {
         static void Main(string[] args)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            var builder = WebApplication.CreateBuilder(args);
 
-            // Webプロジェクトのディレクトリを基準にする
-            var solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-            var webProjectPath = Path.Combine(solutionDir, "BlazorWasmTemplate.Presentation.Web");
-
-            var builder = new ConfigurationBuilder()
-                    .SetBasePath(webProjectPath)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables();
-
-            IConfiguration configuration = builder.Build();
+            IConfiguration configuration = builder.Configuration;
 
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
