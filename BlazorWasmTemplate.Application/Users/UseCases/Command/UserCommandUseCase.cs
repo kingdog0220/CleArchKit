@@ -30,7 +30,7 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
         /// <param name="userRepository"></param>
         /// <param name="userService"></param>
         /// <param name="eventBuffer"></param>
-        public UserCommandUseCase(IUserRepository userRepository,IUserService userService, IDomainEventBuffer eventBuffer)
+        public UserCommandUseCase(IUserRepository userRepository, IUserService userService, IDomainEventBuffer eventBuffer)
         {
             _userRepository = userRepository;
             _userService = userService;
@@ -46,6 +46,12 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
                 throw new Exception($"主キーが重複しています:{userDto.Id}");
             }
 
+            var existCode = await _userService.ExistsByCodeAsync(userDto.Code);
+            if (existCode)
+            {
+                throw new Exception($"CODEが重複しています:{userDto.Code}");
+            }
+
             var createUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
             var evt = createUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
@@ -59,6 +65,12 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
             if (user == null)
             {
                 throw new Exception($"ユーザーはいません:{userDto.Id}");
+            }
+
+            var existCode = await _userService.ExistsByCodeAsync(userDto.Code, userDto.Id);
+            if (existCode)
+            {
+                throw new Exception($"CODEが重複しています:{userDto.Code}");
             }
 
             var updateUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
