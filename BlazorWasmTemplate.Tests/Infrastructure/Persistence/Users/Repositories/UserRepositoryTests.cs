@@ -294,7 +294,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             var user = new User(Guid.NewGuid(), "USER001", "非存在ユーザー", true, DateTime.MinValue, DateTime.MinValue);
 
             // Act & Assert
-            await Assert.ThrowsAsync<NullReferenceException>(() => _userRepository.DeleteAsync(null!));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _userRepository.DeleteAsync(null!));
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserIsNull_ThrowsArgumentNullException()
         {
             // Act & Assert
-            await Assert.ThrowsAsync<NullReferenceException>(() => _userRepository.DeleteAsync(null!));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _userRepository.DeleteAsync(null!));
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace BlazorWasmTemplate.Tests.Infrastructure.Persistence.Users.Repositories
             await _dbContext.SaveChangesAsync();
 
             // Assert - 2回目の削除は例外が発生する
-            await Assert.ThrowsAsync<NullReferenceException>(async () =>
+            await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () =>
             {
                 await _userRepository.DeleteAsync(user);
                 await _dbContext.SaveChangesAsync();
