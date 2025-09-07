@@ -10,8 +10,8 @@ namespace CleArchKit.Application.Users.UseCases.Command
         /// <summary>
         /// ユーザー登録ユースケースを実行する
         /// </summary>
-        /// <param name="userDto"></param>
-        Task CreateAsync(UserDto userDto);
+        /// <param name="createUserDto"></param>
+        Task CreateAsync(CreateUserDto createUserDto);
 
         /// <summary>
         /// ユーザー更新ユースケースを実行する

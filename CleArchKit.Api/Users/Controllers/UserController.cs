@@ -75,13 +75,13 @@ namespace CleArchKit.Api.Users.Controllers
         /// <summary>
         /// ユーザー登録
         /// </summary>
-        /// <param name="userDto"></param>
+        /// <param name="createUserDto"></param>
         [HttpPost("create")]
-        public async Task<ActionResult> CreateAsync(UserDto userDto)
+        public async Task<ActionResult> CreateAsync(CreateUserDto createUserDto)
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.CreateAsync(userDto));
+                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.CreateAsync(createUserDto));
                 return Ok();
             }
             catch (Exception ex)

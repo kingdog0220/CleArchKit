@@ -16,7 +16,6 @@ POST {{apiBaseUrl}}/user/create
 Content-Type: application/json
 
 {
-    "id": "00000000-0000-0000-0000-000000000000",
     "code": "TEST01",
     "name": "TEST",
     "isActive": true

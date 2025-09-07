@@ -43,31 +43,28 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task CreateAsync_WhenValidUser_CreatesUserSuccessfully()
         {
             // Arrange
-            var userDto = new UserDto
+            var createUserDto = new CreateUserDto
             {
-                Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "テストユーザー",
                 IsActive = true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync((User?)null);
-            _mockUserService.Setup(x => x.ExistsByCodeAsync(userDto.Code, null)).ReturnsAsync(false);
+            _mockUserService.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((User?)null);
+            _mockUserService.Setup(x => x.ExistsByCodeAsync(createUserDto.Code, null)).ReturnsAsync(false);
 
             // Act
-            await _userCommandUseCase.CreateAsync(userDto);
+            await _userCommandUseCase.CreateAsync(createUserDto);
 
             // Assert
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
-            _mockUserService.Verify(x => x.ExistsByCodeAsync(userDto.Code, null), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
+            _mockUserService.Verify(x => x.ExistsByCodeAsync(createUserDto.Code, null), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Once);
             _mockUserRepository.Verify(x => x.AddAsync(It.Is<User>(u =>
-                u.Id == userDto.Id &&
-                u.Code == userDto.Code &&
-                u.Name == userDto.Name &&
-                u.IsActive == userDto.IsActive)), Times.Once);
+                u.Id != Guid.Empty &&
+                u.Code == createUserDto.Code &&
+                u.Name == createUserDto.Name &&
+                u.IsActive == createUserDto.IsActive)), Times.Once);
         }
 
         /// <summary>
@@ -77,25 +74,22 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task CreateAsync_WhenIdAlreadyExists_ThrowsException()
         {
             // Arrange
-            var userDto = new UserDto
+            var createUserDto = new CreateUserDto
             {
-                Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "テストユーザー",
                 IsActive = true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            var existingUser = new User(userDto.Id, "EXISTING001", "既存ユーザー", true, DateTime.Now, DateTime.Now);
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync(existingUser);
+            var existingUser = new User(Guid.NewGuid(), "EXISTING001", "既存ユーザー", true, DateTime.Now, DateTime.Now);
+            _mockUserService.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(existingUser);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.CreateAsync(userDto));
-            Assert.Equal($"主キーが重複しています:{userDto.Id}", exception.Message);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.CreateAsync(createUserDto));
+            Assert.StartsWith($"主キーが重複しています:", exception.Message);
 
             // 主キーチェック後は処理が停止することを確認
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
             _mockUserService.Verify(x => x.ExistsByCodeAsync(It.IsAny<string>(), It.IsAny<Guid?>()), Times.Never);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Never);
             _mockUserRepository.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Never);
@@ -108,26 +102,23 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task CreateAsync_WhenCodeAlreadyExists_ThrowsException()
         {
             // Arrange
-            var userDto = new UserDto
+            var createUserDto = new CreateUserDto
             {
-                Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "テストユーザー",
                 IsActive = true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync((User?)null);
-            _mockUserService.Setup(x => x.ExistsByCodeAsync(userDto.Code, null)).ReturnsAsync(true);
+            _mockUserService.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((User?)null);
+            _mockUserService.Setup(x => x.ExistsByCodeAsync(createUserDto.Code, null)).ReturnsAsync(true);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.CreateAsync(userDto));
-            Assert.Equal($"CODEが重複しています:{userDto.Code}", exception.Message);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.CreateAsync(createUserDto));
+            Assert.Equal($"CODEが重複しています:{createUserDto.Code}", exception.Message);
 
             // コードチェック後は処理が停止することを確認
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
-            _mockUserService.Verify(x => x.ExistsByCodeAsync(userDto.Code, null), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(It.IsAny<Guid>()), Times.Once);
+            _mockUserService.Verify(x => x.ExistsByCodeAsync(createUserDto.Code, null), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Never);
             _mockUserRepository.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Never);
         }

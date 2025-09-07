@@ -37,21 +37,21 @@ namespace CleArchKit.Application.Users.UseCases.Command
         }
 
         /// <inheritdoc/>
-        public async Task CreateAsync(UserDto userDto)
+        public async Task CreateAsync(CreateUserDto createUserDto)
         {
-            var user = await _userService.GetByIdAsync(userDto.Id);
+            var createUser = createUserDto.ToEntity();
+            var user = await _userService.GetByIdAsync(createUser.Id);
             if (user != null)
             {
-                throw new Exception($"主キーが重複しています:{userDto.Id}");
+                throw new Exception($"主キーが重複しています:{createUser.Id}");
             }
 
-            var existCode = await _userService.ExistsByCodeAsync(userDto.Code);
+            var existCode = await _userService.ExistsByCodeAsync(createUser.Code);
             if (existCode)
             {
-                throw new Exception($"CODEが重複しています:{userDto.Code}");
+                throw new Exception($"CODEが重複しています:{createUser.Code}");
             }
 
-            var createUser = userDto.ToEntity();
             var evt = createUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
             await _userRepository.AddAsync(createUser);
