@@ -1,4 +1,3 @@
-using AutoMapper;
 using BlazorWasmTemplate.Application.Users.Dtos;
 using BlazorWasmTemplate.Application.Users.UseCases.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +14,12 @@ namespace BlazorWasmTemplate.Api.Users.Controllers
         private readonly IUserQueryUseCase _userQueryUseCase;
 
         /// <summary>
-        /// Mapper
-        /// </summary>
-        private readonly IMapper _mapper;
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userQueryUseCase"></param>
-        /// <param name="mapper"></param>
-        public UserController(IUserQueryUseCase userQueryUseCase, IMapper mapper)
+        public UserController(IUserQueryUseCase userQueryUseCase)
         {
             _userQueryUseCase = userQueryUseCase;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -38,7 +30,18 @@ namespace BlazorWasmTemplate.Api.Users.Controllers
         public async Task<ActionResult<List<UserDto>>> GetAll()
         {
             var users = await _userQueryUseCase.GetAllAsync();
-            var dtoList = _mapper.Map<List<UserDto>>(users);
+            var dtoList = new List<UserDto>();
+            foreach (var user in users)
+            {
+                var dto = new UserDto();
+                dto.Id = user.Id;
+                dto.Code = user.Code;
+                dto.Name = user.Name;
+                dto.IsActive = user.IsActive;
+                dto.CreatedAt = user.CreatedAt;
+                dto.UpdatedAt = user.UpdatedAt;
+                dtoList.Add(dto);
+            }
 
             return Ok(dtoList);
         }

@@ -29,9 +29,6 @@ builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// Mapping
-builder.Services.AddAutoMapper(typeof(UserProfile));
-
 // Cache
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IUserCache, UserCache>();
