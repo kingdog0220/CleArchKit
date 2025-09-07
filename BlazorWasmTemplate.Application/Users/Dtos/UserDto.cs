@@ -1,3 +1,5 @@
+using BlazorWasmTemplate.Domain.Users.Entities;
+
 namespace BlazorWasmTemplate.Application.Users.Dtos
 {
     /// <summary>
@@ -38,5 +40,34 @@ namespace BlazorWasmTemplate.Application.Users.Dtos
         /// </summary>
 
         public DateTime? UpdatedAt { get; set; }
+
+        /// <summary>
+        /// EntityからDTOに変換する
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>DTO</returns>
+        public static UserDto From(User entity) => new UserDto
+        {
+            Id = entity.Id,
+            Code = entity.Code,
+            Name = entity.Name,
+            IsActive = entity.IsActive,
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt
+        };
+
+        /// <summary>
+        /// DTOからEntityに変換する
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns>DTO</returns>
+        public User ToEntity() => new User(
+        Id,
+        Code,
+        Name,
+        IsActive,
+        CreatedAt,
+        UpdatedAt);
+
     }
 }

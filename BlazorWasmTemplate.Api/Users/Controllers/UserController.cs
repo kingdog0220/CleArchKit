@@ -30,18 +30,7 @@ namespace BlazorWasmTemplate.Api.Users.Controllers
         public async Task<ActionResult<List<UserDto>>> GetAll()
         {
             var users = await _userQueryUseCase.GetAllAsync();
-            var dtoList = new List<UserDto>();
-            foreach (var user in users)
-            {
-                var dto = new UserDto();
-                dto.Id = user.Id;
-                dto.Code = user.Code;
-                dto.Name = user.Name;
-                dto.IsActive = user.IsActive;
-                dto.CreatedAt = user.CreatedAt;
-                dto.UpdatedAt = user.UpdatedAt;
-                dtoList.Add(dto);
-            }
+            var dtoList = users.Select(UserDto.From).ToList();
 
             return Ok(dtoList);
         }
