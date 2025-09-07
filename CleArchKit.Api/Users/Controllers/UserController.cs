@@ -26,7 +26,7 @@ namespace CleArchKit.Api.Users.Controllers
         /// 全件取得
         /// </summary>
         /// <returns>ユーザーリスト</returns>
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult<List<UserDto>>> GetAll()
         {
             var users = await _userQueryUseCase.GetAllAsync();
