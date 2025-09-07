@@ -1,7 +1,6 @@
 using BlazorWasmTemplate.Application.Events;
 using BlazorWasmTemplate.Application.Users.Dtos;
 using BlazorWasmTemplate.Application.Users.Services;
-using BlazorWasmTemplate.Domain.Users.Entities;
 using BlazorWasmTemplate.Domain.Users.Repositories;
 
 namespace BlazorWasmTemplate.Application.Users.UseCases.Command
@@ -52,7 +51,7 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
                 throw new Exception($"CODEが重複しています:{userDto.Code}");
             }
 
-            var createUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
+            var createUser = userDto.ToEntity();
             var evt = createUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
             await _userRepository.AddAsync(createUser);
@@ -73,7 +72,7 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
                 throw new Exception($"CODEが重複しています:{userDto.Code}");
             }
 
-            var updateUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
+            var updateUser = userDto.ToEntity();
             var evt = updateUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
             await _userRepository.UpdateAsync(updateUser);
@@ -88,7 +87,7 @@ namespace BlazorWasmTemplate.Application.Users.UseCases.Command
                 throw new Exception($"ユーザーはいません:{userDto.Id}");
             }
 
-            var deleteUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
+            var deleteUser = userDto.ToEntity();
             var evt = deleteUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
             await _userRepository.DeleteAsync(deleteUser);
