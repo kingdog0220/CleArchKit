@@ -1,7 +1,11 @@
+using CleArchKit.Application.Events;
 using CleArchKit.Application.Users.Cache;
 using CleArchKit.Application.Users.Services;
+using CleArchKit.Application.Users.UseCases.Command;
 using CleArchKit.Application.Users.UseCases.Query;
+using CleArchKit.Domain.Events;
 using CleArchKit.Domain.Users.Repositories;
+using CleArchKit.Infrastructure.Events;
 using CleArchKit.Infrastructure.Persistence.Postgresql;
 using CleArchKit.Infrastructure.Persistence.Users.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +28,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 // UseCase
 builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
+builder.Services.AddScoped<IUserCommandUseCase, UserCommandUseCase>();
 
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -31,6 +36,12 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Cache
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IUserCache, UserCache>();
+
+// Dispatcher
+builder.Services.AddSingleton<IDomainEventDispatcher, InMemoryDomainEventDispatcher>();
+
+// Event
+builder.Services.AddScoped<IDomainEventBuffer, DomainEventBuffer>();
 
 var app = builder.Build();
 
