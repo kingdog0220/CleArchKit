@@ -134,32 +134,31 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task UpdateAsync_WhenValidUser_UpdatesUserSuccessfully()
         {
             // Arrange
-            var userDto = new UserDto
+            var updateUserDto = new UpdateUserDto
             {
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
                 IsActive = true,
                 CreatedAt = DateTime.Now.AddDays(-1),
-                UpdatedAt = DateTime.Now
             };
 
-            var existingUser = new User(userDto.Id, "OLD_CODE", "更新前ユーザー", false, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync(existingUser);
-            _mockUserService.Setup(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id)).ReturnsAsync(false);
+            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "更新前ユーザー", false, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
+            _mockUserService.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
+            _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(false);
 
             // Act
-            await _userCommandUseCase.UpdateAsync(userDto);
+            await _userCommandUseCase.UpdateAsync(updateUserDto);
 
             // Assert
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
-            _mockUserService.Verify(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(updateUserDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Once);
             _mockUserRepository.Verify(x => x.UpdateAsync(It.Is<User>(u =>
-                u.Id == userDto.Id &&
-                u.Code == userDto.Code &&
-                u.Name == userDto.Name &&
-                u.IsActive == userDto.IsActive)), Times.Once);
+                u.Id == updateUserDto.Id &&
+                u.Code == updateUserDto.Code &&
+                u.Name == updateUserDto.Name &&
+                u.IsActive == updateUserDto.IsActive)), Times.Once);
         }
 
         /// <summary>
@@ -169,24 +168,23 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task UpdateAsync_WhenUserDoesNotExist_ThrowsException()
         {
             // Arrange
-            var userDto = new UserDto
+            var updateUserDto = new UpdateUserDto
             {
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "存在しないユーザー",
                 IsActive = true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync((User?)null);
+            _mockUserService.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync((User?)null);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.UpdateAsync(userDto));
-            Assert.Equal($"ユーザーはいません:{userDto.Id}", exception.Message);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.UpdateAsync(updateUserDto));
+            Assert.Equal($"ユーザーはいません:{updateUserDto.Id}", exception.Message);
 
             // ユーザー存在チェック後は処理が停止することを確認
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(updateUserDto.Id), Times.Once);
             _mockUserService.Verify(x => x.ExistsByCodeAsync(It.IsAny<string>(), It.IsAny<Guid?>()), Times.Never);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Never);
             _mockUserRepository.Verify(x => x.UpdateAsync(It.IsAny<User>()), Times.Never);
@@ -199,27 +197,26 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task UpdateAsync_WhenCodeAlreadyExistsForOtherUser_ThrowsException()
         {
             // Arrange
-            var userDto = new UserDto
+            var updateUserDto = new UpdateUserDto
             {
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新ユーザー",
                 IsActive = true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            var existingUser = new User(userDto.Id, "OLD_CODE", "既存ユーザー", true, DateTime.Now, DateTime.Now);
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync(existingUser);
-            _mockUserService.Setup(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id)).ReturnsAsync(true);
+            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "既存ユーザー", true, DateTime.Now, DateTime.Now);
+            _mockUserService.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
+            _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(true);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.UpdateAsync(userDto));
-            Assert.Equal($"CODEが重複しています:{userDto.Code}", exception.Message);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.UpdateAsync(updateUserDto));
+            Assert.Equal($"CODEが重複しています:{updateUserDto.Code}", exception.Message);
 
             // コードチェック後は処理が停止することを確認
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
-            _mockUserService.Verify(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(updateUserDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Never);
             _mockUserRepository.Verify(x => x.UpdateAsync(It.IsAny<User>()), Times.Never);
         }
@@ -231,26 +228,25 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task UpdateAsync_WhenUpdatingSameCodeForSameUser_ProcessesNormally()
         {
             // Arrange
-            var userDto = new UserDto
+            var updateUserDto = new UpdateUserDto
             {
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
                 IsActive = true,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
             };
 
-            var existingUser = new User(userDto.Id, "USER001", "更新前ユーザー", false, DateTime.Now, DateTime.Now);
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync(existingUser);
-            _mockUserService.Setup(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id)).ReturnsAsync(false);
+            var existingUser = new User(updateUserDto.Id, "USER001", "更新前ユーザー", false, DateTime.Now, DateTime.Now);
+            _mockUserService.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
+            _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(false);
 
             // Act
-            await _userCommandUseCase.UpdateAsync(userDto);
+            await _userCommandUseCase.UpdateAsync(updateUserDto);
 
             // Assert
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
-            _mockUserService.Verify(x => x.ExistsByCodeAsync(userDto.Code, userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(updateUserDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Once);
             _mockUserRepository.Verify(x => x.UpdateAsync(It.IsAny<User>()), Times.Once);
         }

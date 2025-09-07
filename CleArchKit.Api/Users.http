@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
     "id": "{{testId}}",
-    "code": "TEST01",
+    "code": "TEST_UP_02",
     "name": "TEST_UPDATE",
     "isActive": true
 }

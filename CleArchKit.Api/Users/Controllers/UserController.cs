@@ -94,13 +94,13 @@ namespace CleArchKit.Api.Users.Controllers
         /// <summary>
         /// ユーザー更新
         /// </summary>
-        /// <param name="userDto"></param>
+        /// <param name="updateUserDto"></param>
         [HttpPut("update")]
-        public async Task<ActionResult> UpdateAsync(UserDto userDto)
+        public async Task<ActionResult> UpdateAsync(UpdateUserDto updateUserDto)
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.UpdateAsync(userDto));
+                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.UpdateAsync(updateUserDto));
                 return Ok();
             }
             catch (Exception ex)

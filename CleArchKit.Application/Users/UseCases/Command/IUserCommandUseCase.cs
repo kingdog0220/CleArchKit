@@ -16,8 +16,8 @@ namespace CleArchKit.Application.Users.UseCases.Command
         /// <summary>
         /// ユーザー更新ユースケースを実行する
         /// </summary>
-        /// <param name="userDto"></param>
-        Task UpdateAsync(UserDto userDto);
+        /// <param name="updateUserDto"></param>
+        Task UpdateAsync(UpdateUserDto updateUserDto);
 
         /// <summary>
         /// ユーザー削除ユースケースを実行する

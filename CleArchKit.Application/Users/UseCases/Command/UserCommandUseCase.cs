@@ -58,21 +58,21 @@ namespace CleArchKit.Application.Users.UseCases.Command
         }
 
         /// <inheritdoc/>
-        public async Task UpdateAsync(UserDto userDto)
+        public async Task UpdateAsync(UpdateUserDto updateUserDto)
         {
-            var user = await _userService.GetByIdAsync(userDto.Id);
+            var user = await _userService.GetByIdAsync(updateUserDto.Id);
             if (user == null)
             {
-                throw new Exception($"ユーザーはいません:{userDto.Id}");
+                throw new Exception($"ユーザーはいません:{updateUserDto.Id}");
             }
 
-            var existCode = await _userService.ExistsByCodeAsync(userDto.Code, userDto.Id);
+            var existCode = await _userService.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id);
             if (existCode)
             {
-                throw new Exception($"CODEが重複しています:{userDto.Code}");
+                throw new Exception($"CODEが重複しています:{updateUserDto.Code}");
             }
 
-            var updateUser = userDto.ToEntity();
+            var updateUser = updateUserDto.ToEntity();
             var evt = updateUser.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
             await _userRepository.UpdateAsync(updateUser);
