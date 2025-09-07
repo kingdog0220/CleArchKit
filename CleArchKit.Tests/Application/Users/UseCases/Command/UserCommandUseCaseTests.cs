@@ -262,30 +262,20 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task DeleteAsync_WhenValidUser_DeletesUserSuccessfully()
         {
             // Arrange
-            var userDto = new UserDto
-            {
-                Id = Guid.NewGuid(),
-                Code = "USER001",
-                Name = "削除対象ユーザー",
-                IsActive = true,
-                CreatedAt = DateTime.Now.AddDays(-1),
-                UpdatedAt = DateTime.Now
-            };
-
-            var existingUser = new User(userDto.Id, userDto.Code, userDto.Name, userDto.IsActive, userDto.CreatedAt, userDto.UpdatedAt);
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync(existingUser);
+            var existingUser = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.Now.AddDays(-1), DateTime.Now);
+            _mockUserService.Setup(x => x.GetByIdAsync(existingUser.Id)).ReturnsAsync(existingUser);
 
             // Act
-            await _userCommandUseCase.DeleteAsync(userDto);
+            await _userCommandUseCase.DeleteAsync(existingUser.Id);
 
             // Assert
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(existingUser.Id), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Once);
             _mockUserRepository.Verify(x => x.DeleteAsync(It.Is<User>(u =>
-                u.Id == userDto.Id &&
-                u.Code == userDto.Code &&
-                u.Name == userDto.Name &&
-                u.IsActive == userDto.IsActive)), Times.Once);
+                u.Id == existingUser.Id &&
+                u.Code == existingUser.Code &&
+                u.Name == existingUser.Name &&
+                u.IsActive == existingUser.IsActive)), Times.Once);
         }
 
         /// <summary>
@@ -295,24 +285,15 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task DeleteAsync_WhenUserDoesNotExist_ThrowsException()
         {
             // Arrange
-            var userDto = new UserDto
-            {
-                Id = Guid.NewGuid(),
-                Code = "USER001",
-                Name = "存在しないユーザー",
-                IsActive = true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-
-            _mockUserService.Setup(x => x.GetByIdAsync(userDto.Id)).ReturnsAsync((User?)null);
+            var notExistingUser = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", true, DateTime.Now.AddDays(-1), DateTime.Now);
+            _mockUserService.Setup(x => x.GetByIdAsync(notExistingUser.Id)).ReturnsAsync((User?)null);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.DeleteAsync(userDto));
-            Assert.Equal($"ユーザーはいません:{userDto.Id}", exception.Message);
+            var exception = await Assert.ThrowsAsync<Exception>(() => _userCommandUseCase.DeleteAsync(notExistingUser.Id));
+            Assert.Equal($"ユーザーはいません:{notExistingUser.Id}", exception.Message);
 
             // ユーザー存在チェック後は処理が停止することを確認
-            _mockUserService.Verify(x => x.GetByIdAsync(userDto.Id), Times.Once);
+            _mockUserService.Verify(x => x.GetByIdAsync(notExistingUser.Id), Times.Once);
             _mockEventBuffer.Verify(x => x.EnqueueEvent(It.IsAny<IDomainEvent>()), Times.Never);
             _mockUserRepository.Verify(x => x.DeleteAsync(It.IsAny<User>()), Times.Never);
         }

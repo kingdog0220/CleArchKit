@@ -22,7 +22,7 @@ namespace CleArchKit.Application.Users.UseCases.Command
         /// <summary>
         /// ユーザー削除ユースケースを実行する
         /// </summary>
-        /// <param name="userDto"></param>
-        Task DeleteAsync(UserDto userDto);
+        /// <param name="id">物理ID</param>
+        Task DeleteAsync(Guid id);
     }
 }

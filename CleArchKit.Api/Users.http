@@ -33,12 +33,5 @@ Content-Type: application/json
 }
 
 ### ユーザー削除
-DELETE {{apiBaseUrl}}/user/delete
+DELETE {{apiBaseUrl}}/user/delete/{{testId}}
 Content-Type: application/json
-
-{
-    "id": "{{testId}}",
-    "code": "TEST01",
-    "name": "TEST_DELETE",
-    "isActive": true
-}

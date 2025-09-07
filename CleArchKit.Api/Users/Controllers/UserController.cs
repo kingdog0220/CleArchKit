@@ -114,12 +114,12 @@ namespace CleArchKit.Api.Users.Controllers
         /// ユーザー削除
         /// </summary>
         /// <param name="userDto"></param>
-        [HttpDelete("delete")]
-        public async Task<ActionResult> DeleteAsync(UserDto userDto)
+        [HttpDelete("delete/{id}")]
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.DeleteAsync(userDto));
+                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.DeleteAsync(id));
                 return Ok();
             }
             catch (Exception ex)

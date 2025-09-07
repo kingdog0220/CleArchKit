@@ -79,18 +79,17 @@ namespace CleArchKit.Application.Users.UseCases.Command
         }
 
         /// <inheritdoc/>
-        public async Task DeleteAsync(UserDto userDto)
+        public async Task DeleteAsync(Guid id)
         {
-            var user = await _userService.GetByIdAsync(userDto.Id);
+            var user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
-                throw new Exception($"ユーザーはいません:{userDto.Id}");
+                throw new Exception($"ユーザーはいません:{id}");
             }
 
-            var deleteUser = userDto.ToEntity();
-            var evt = deleteUser.PublishUserUpdatedEvent();
+            var evt = user.PublishUserUpdatedEvent();
             _eventBuffer.EnqueueEvent(evt);
-            await _userRepository.DeleteAsync(deleteUser);
+            await _userRepository.DeleteAsync(user);
         }
 
     }
