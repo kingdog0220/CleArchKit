@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\CleArchKit.Infrastructure\CleArchKit.Infrastructure.csproj" />
+    <ProjectReference Include="..\CleArchKit.Domain\CleArchKit.Domain.csproj" />
+    <ProjectReference Include="..\CleArchKit.Application\CleArchKit.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CleArchKit.Presentation.Web</AssemblyName>
+    <RootNamespace>CleArchKit.Presentation.Web</RootNamespace>
+  </PropertyGroup>
+
+</Project>

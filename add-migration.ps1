@@ -10,7 +10,7 @@ if (-not $MigrationName) {
 
 # プロジェクトディレクトリを取得
 $projectDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$migrationsProject = Join-Path $projectDir "BlazorWasmTemplate.Migrations"
+$migrationsProject = Join-Path $projectDir "CleArchKit.Migrations"
 
 # 出力先ディレクトリ（プロジェクト内の相対パス）
 $outputDir = "Postgresql\Migrations"
