@@ -5,7 +5,7 @@
             // IntelliSense を使用して、C# デバッグに存在する属性を確認します
             // 既存の属性の説明にホバーを使用する
             // 詳細については、https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md を参照してください。
-            "name": ".NET Core Launch (web)",
+            "name": "Start Web (Blazor)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -27,9 +27,30 @@
             }
         },
         {
+            "name": "Start API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/BlazorWasmTemplate.Api/bin/Debug/net9.0/BlazorWasmTemplate.Api.dll",
+            "cwd": "${workspaceFolder}/BlazorWasmTemplate.Api",
+            "args": [],
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start Web + API",
+            "configurations": [
+                "Start Web (Blazor)",
+                "Start API"
+            ]
         }
     ]
 }
