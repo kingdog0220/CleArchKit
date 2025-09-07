@@ -46,10 +46,10 @@ namespace CleArchKit.Api.Users.Controllers
         /// </summary>
         /// <returns>ユーザーリスト</returns>
         [HttpGet("all")]
-        public async Task<ActionResult<List<UserDto>>> GetAll()
+        public async Task<ActionResult<List<UserResponseDto>>> GetAll()
         {
             var users = await _userQueryUseCase.GetAllAsync();
-            var dtoList = users.Select(UserDto.From).ToList();
+            var dtoList = users.Select(UserResponseDto.From).ToList();
 
             return Ok(dtoList);
         }
@@ -60,7 +60,7 @@ namespace CleArchKit.Api.Users.Controllers
         /// <param name="id">物理ID</param>
         /// <returns>ユーザー</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetByIdAsync(Guid id)
+        public async Task<ActionResult<UserResponseDto>> GetByIdAsync(Guid id)
         {
             var user = await _userQueryUseCase.GetByIdAsync(id);
             if (user == null)
@@ -68,7 +68,7 @@ namespace CleArchKit.Api.Users.Controllers
                 return NotFound();
             }
 
-            var dto = UserDto.From(user);
+            var dto = UserResponseDto.From(user);
             return Ok(dto);
         }
 

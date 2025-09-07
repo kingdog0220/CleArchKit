@@ -3,12 +3,10 @@ using CleArchKit.Domain.Users.Entities;
 namespace CleArchKit.Application.Users.Dtos
 {
     /// <summary>
-    /// ユーザー DTO
+    /// 取得用ユーザー DTO
     /// </summary>
-    public class UserDto
+    public class UserResponseDto
     {
-        //TODO ここはもうちょい練る。リクエスト/レスポンスと分離するかなど
-
         /// <summary>
         /// 物理ID
         /// </summary>
@@ -32,13 +30,11 @@ namespace CleArchKit.Application.Users.Dtos
         /// <summary>
         /// 作成日時
         /// </summary>
-
         public DateTime? CreatedAt { get; set; }
 
         /// <summary>
         /// 更新日時
         /// </summary>
-
         public DateTime? UpdatedAt { get; set; }
 
         /// <summary>
@@ -46,7 +42,7 @@ namespace CleArchKit.Application.Users.Dtos
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>DTO</returns>
-        public static UserDto From(User entity) => new UserDto
+        public static UserResponseDto From(User entity) => new UserResponseDto
         {
             Id = entity.Id,
             Code = entity.Code,
@@ -55,19 +51,6 @@ namespace CleArchKit.Application.Users.Dtos
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
         };
-
-        /// <summary>
-        /// DTOからEntityに変換する
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns>DTO</returns>
-        public User ToEntity() => new User(
-        Id,
-        Code,
-        Name,
-        IsActive,
-        CreatedAt,
-        UpdatedAt);
 
     }
 }
