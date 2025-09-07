@@ -3,10 +3,8 @@ using CleArchKit.Application.Persistence;
 
 namespace CleArchKit.Application.Expands
 {
-    /// <summary>
-    /// ユースケースで共通して行う処理を拡張したラッパー
-    /// </summary>
-    public class UseCaseExecutor
+    /// <inheritdoc/>
+    public class UseCaseExecutor : IUseCaseExecutor
     {
         /// <summary>
         /// Unit of Workパターン
@@ -29,11 +27,7 @@ namespace CleArchKit.Application.Expands
             _eventBuffer = eventBuffer;
         }
 
-        /// <summary>
-        /// ユースケースを実行する
-        /// </summary>
-        /// <param name="useCase"></param>
-        /// <param name="cancellationToken"></param>
+        /// <inheritdoc/>
         public async Task ExecuteAsync(Func<Task> useCase, CancellationToken cancellationToken = default)
         {
             try

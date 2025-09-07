@@ -1,4 +1,6 @@
 using CleArchKit.Application.Events;
+using CleArchKit.Application.Expands;
+using CleArchKit.Application.Persistence;
 using CleArchKit.Application.Users.Cache;
 using CleArchKit.Application.Users.Services;
 using CleArchKit.Application.Users.UseCases.Command;
@@ -6,6 +8,7 @@ using CleArchKit.Application.Users.UseCases.Query;
 using CleArchKit.Domain.Events;
 using CleArchKit.Domain.Users.Repositories;
 using CleArchKit.Infrastructure.Events;
+using CleArchKit.Infrastructure.Persistence;
 using CleArchKit.Infrastructure.Persistence.Postgresql;
 using CleArchKit.Infrastructure.Persistence.Users.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +32,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 // UseCase
 builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
 builder.Services.AddScoped<IUserCommandUseCase, UserCommandUseCase>();
+builder.Services.AddScoped<IUseCaseExecutor, UseCaseExecutor>();
+
+// Transaction
+builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
 // Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
