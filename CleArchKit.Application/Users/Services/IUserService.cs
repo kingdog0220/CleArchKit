@@ -1,5 +1,3 @@
-using CleArchKit.Domain.Users.Entities;
-
 namespace CleArchKit.Application.Users.Services
 {
     /// <summary>
@@ -7,19 +5,6 @@ namespace CleArchKit.Application.Users.Services
     /// </summary>
     public interface IUserService
     {
-        /// <summary>
-        /// 全件取得
-        /// </summary>
-        /// <returns>ユーザーリスト</returns>
-        Task<IEnumerable<User>> GetAllAsync();
-
-        /// <summary>
-        /// IDによるユーザー取得
-        /// </summary>
-        /// <param name="id">物理ID</param>
-        /// <returns>ユーザー</returns>
-        Task<User?> GetByIdAsync(Guid id);
-
         /// <summary>
         /// コードが存在するかチェックする
         /// </summary>

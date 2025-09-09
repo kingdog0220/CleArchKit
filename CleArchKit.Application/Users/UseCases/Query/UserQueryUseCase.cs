@@ -1,5 +1,5 @@
-using CleArchKit.Application.Users.Services;
 using CleArchKit.Domain.Users.Entities;
+using CleArchKit.Domain.Users.Repositories;
 
 namespace CleArchKit.Application.Users.UseCases.Query
 {
@@ -7,30 +7,30 @@ namespace CleArchKit.Application.Users.UseCases.Query
     public class UserQueryUseCase : IUserQueryUseCase
     {
         /// <summary>
-        /// ユーザーサービス
+        /// ユーザーリポジトリ
         /// </summary>
-        IUserService _userService;
+        IUserRepository _userRepository;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="userService"></param>
+        /// <param name="userRepository"></param>
 
-        public UserQueryUseCase(IUserService userService)
+        public UserQueryUseCase(IUserRepository userRepository)
         {
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _userService.GetAllAsync();
+            return await _userRepository.GetAllAsync();
         }
 
         /// <inheritdoc/>
         public async Task<User?> GetByIdAsync(Guid id)
         {
-            return await _userService.GetByIdAsync(id);
+            return await _userRepository.GetByIdAsync(id);
         }
     }
 }

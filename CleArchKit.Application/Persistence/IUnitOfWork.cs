@@ -1,5 +1,3 @@
-using CleArchKit.Domain.Events;
-
 namespace CleArchKit.Application.Persistence
 {
     /// <summary>

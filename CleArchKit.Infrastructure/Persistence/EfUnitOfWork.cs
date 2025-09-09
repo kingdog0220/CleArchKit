@@ -1,5 +1,4 @@
 using CleArchKit.Application.Persistence;
-using CleArchKit.Domain.Events;
 using CleArchKit.Infrastructure.Persistence.Postgresql;
 
 namespace CleArchKit.Infrastructure.Persistence

@@ -1,4 +1,3 @@
-using CleArchKit.Application.Expands;
 using CleArchKit.Application.Users.Dtos;
 using CleArchKit.Application.Users.UseCases.Command;
 using CleArchKit.Application.Users.UseCases.Query;
@@ -24,21 +23,14 @@ namespace CleArchKit.Api.Users.Controllers
         private readonly IUserCommandUseCase _userCommandUseCase;
 
         /// <summary>
-        /// ユースケースで共通して行う処理を拡張したラッパー
-        /// </summary>
-        private readonly IUseCaseExecutor _useCaseExecutor;
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userQueryUseCase"></param>
         /// <param name="userCommandUseCase"></param>
-        /// <param name="useCaseExecutor"></param>
-        public UserController(IUserQueryUseCase userQueryUseCase, IUserCommandUseCase userCommandUseCase, IUseCaseExecutor useCaseExecutor)
+        public UserController(IUserQueryUseCase userQueryUseCase, IUserCommandUseCase userCommandUseCase)
         {
             _userQueryUseCase = userQueryUseCase;
             _userCommandUseCase = userCommandUseCase;
-            _useCaseExecutor = useCaseExecutor;
         }
 
         /// <summary>
@@ -81,7 +73,7 @@ namespace CleArchKit.Api.Users.Controllers
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.CreateAsync(createUserDto));
+                await _userCommandUseCase.CreateAsync(createUserDto);
                 return Ok();
             }
             catch (Exception ex)
@@ -100,7 +92,7 @@ namespace CleArchKit.Api.Users.Controllers
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.UpdateAsync(updateUserDto));
+                await _userCommandUseCase.UpdateAsync(updateUserDto);
                 return Ok();
             }
             catch (Exception ex)
@@ -119,7 +111,7 @@ namespace CleArchKit.Api.Users.Controllers
         {
             try
             {
-                await _useCaseExecutor.ExecuteAsync(() => _userCommandUseCase.DeleteAsync(id));
+                await _userCommandUseCase.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

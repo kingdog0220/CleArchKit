@@ -1,5 +1,3 @@
-using CleArchKit.Domain.Users.Events;
-
 namespace CleArchKit.Domain.Users.Entities
 {
     /// <summary>
@@ -59,15 +57,6 @@ namespace CleArchKit.Domain.Users.Entities
             IsActive = isActive;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
-        }
-
-        /// <summary>
-        /// ユーザードメインに関するイベント発行
-        /// </summary>
-        /// <param name="domainEvent"></param>
-        public UserUpdatedEvent PublishUserUpdatedEvent()
-        {
-            return new UserUpdatedEvent(Id);
         }
     }
 }

@@ -1,5 +1,3 @@
-using CleArchKit.Application.Users.Cache;
-using CleArchKit.Domain.Users.Entities;
 using CleArchKit.Domain.Users.Repositories;
 
 namespace CleArchKit.Application.Users.Services
@@ -13,31 +11,12 @@ namespace CleArchKit.Application.Users.Services
         private readonly IUserRepository _repository;
 
         /// <summary>
-        /// ユーザーキャッシュ
-        /// </summary>
-        private readonly IUserCache _cache;
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userRepository"></param>
-        /// <param name="userCache"></param>
-        public UserService(IUserRepository userRepository, IUserCache userCache)
+        public UserService(IUserRepository userRepository)
         {
             _repository = userRepository;
-            _cache = userCache;
-        }
-
-        /// <inheritdoc/>
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await _cache.GetAllAsync();
-        }
-
-        /// <inheritdoc/>
-        public async Task<User?> GetByIdAsync(Guid id)
-        {
-            return await _cache.GetByIdAsync(id);
         }
 
         /// <inheritdoc/>
