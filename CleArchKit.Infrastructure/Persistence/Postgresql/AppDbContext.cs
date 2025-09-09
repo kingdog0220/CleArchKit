@@ -1,5 +1,7 @@
 using CleArchKit.Domain.Users.Entities;
+using CleArchKit.Domain.Outbox.Entities;
 using CleArchKit.Infrastructure.Persistence.Users.Configurations;
+using CleArchKit.Infrastructure.Persistence.Outbox.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleArchKit.Infrastructure.Persistence.Postgresql
@@ -13,6 +15,11 @@ namespace CleArchKit.Infrastructure.Persistence.Postgresql
         /// ユーザーエンティティの DbSet
         /// </summary>
         public DbSet<User> Users => Set<User>();
+
+        /// <summary>
+        /// Outboxイベントエンティティの DbSet
+        /// </summary>
+        public DbSet<OutboxEvent> OutboxEvents => Set<OutboxEvent>();
 
         /// <summary>
         /// コンストラクタ
@@ -41,6 +48,7 @@ namespace CleArchKit.Infrastructure.Persistence.Postgresql
 
             // Fluent API
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new OutboxEventConfiguration());
         }
     }
 }
