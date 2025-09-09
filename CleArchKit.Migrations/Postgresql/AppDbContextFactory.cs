@@ -1,7 +1,6 @@
 using CleArchKit.Infrastructure.Persistence.Postgresql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace CleArchKit.Migrations.Postgresql
 {
@@ -12,19 +11,9 @@ namespace CleArchKit.Migrations.Postgresql
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            var builder = WebApplication.CreateBuilder(args);
 
-            // Webプロジェクトのディレクトリを基準にする
-            var solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
-            var webProjectPath = Path.Combine(solutionDir, "CleArchKit.Presentation.Web");
-
-            var builder = new ConfigurationBuilder()
-                    .SetBasePath(webProjectPath)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables();
-
-            IConfiguration configuration = builder.Build();
+            IConfiguration configuration = builder.Configuration;
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
