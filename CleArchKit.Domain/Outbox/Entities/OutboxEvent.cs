@@ -3,6 +3,7 @@ using CleArchKit.Domain.Events;
 
 namespace CleArchKit.Domain.Outbox.Entities
 {
+    // コミット先チェック
     /// <summary>
     /// Outboxイベントエンティティ
     /// </summary>
