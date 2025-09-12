@@ -3,6 +3,7 @@
 @using CleArchKit.Application.Users.UseCases.Command
 @using CleArchKit.Application.Users.Dtos
 @using CleArchKit.Application.Persistence
+@using CleArchKit.Presentation.Web.Components.Enums
 
 @inject IUserCommandUseCase UserCommandUseCase
 @inject NavigationManager Navigation
@@ -109,12 +110,12 @@
 
                         <div class="d-flex justify-content-between align-items-center">
                             <button type="button" class="btn btn-outline-secondary" @onclick="HandleBackClick"
-                                disabled="@isSubmitting">
+                                disabled="@(state == SubmitState.Submitting || state == SubmitState.Success)">
                                 <i class="bi bi-arrow-left"></i> 一覧に戻る
                             </button>
 
-                            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
-                                @if (isSubmitting)
+                            <button type="submit" class="btn btn-primary" disabled="@(state == SubmitState.Submitting || state == SubmitState.Success)">
+                                @if (state == SubmitState.Submitting)
                                 {
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true"></span>
@@ -174,19 +175,6 @@
         IsActive = true
     };
 
-    enum SubmitState
-    {
-        // 入力可能
-        Idle,
-        // 登録可能
-        Submitting,
-        // 登録成功
-        Success,
-        // エラー
-        Error
-    }
-
-    private bool isSubmitting = false;
     private string? errorMessage;
     private string? successMessage;
 
@@ -198,7 +186,6 @@
         {
             state = SubmitState.Submitting;
 
-            isSubmitting = true;
             errorMessage = null;
             successMessage = null;
 
@@ -215,7 +202,6 @@
 
             // 成功時の処理
             state = SubmitState.Success;
-            isSubmitting = false;
             successMessage = "ユーザーが正常に登録されました。一覧画面に戻ります。";
 
             // 少し待ってから一覧画面に遷移
@@ -229,7 +215,6 @@
         catch (Exception ex)
         {
             errorMessage = $"ユーザーの登録に失敗しました: {ex.Message}";
-            isSubmitting = false;
             state = SubmitState.Error;
         }
     }
