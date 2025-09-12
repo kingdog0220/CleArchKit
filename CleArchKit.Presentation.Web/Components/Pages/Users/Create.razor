@@ -73,18 +73,24 @@
                             <label for="code" class="form-label">
                                 コード <span class="text-danger">*</span>
                             </label>
-                            <InputText id="code" class="form-control" @bind-Value="createUserDto.Code"
-                                placeholder="ユーザーコードを入力してください" maxlength="10" />
+                            <InputText id="code"
+                                    class="form-control"
+                                    @bind-Value="createUserDto.Code"
+                                    placeholder="ユーザーコードを入力してください"
+                                    maxlength="10" />
                             <ValidationMessage For="@(() => createUserDto.Code)" class="text-danger" />
                             <div class="form-text">
-                                英数字とハイフン、アンダースコアが使用できます（最大10文字）
+                                英数字、ハイフン、アンダースコアが使用できます（最大10文字）
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="name" class="form-label">名称</label>
-                            <InputText id="name" class="form-control" @bind-Value="createUserDto.Name"
-                                placeholder="ユーザー名を入力してください" maxlength="50" />
+                            <InputText id="name"
+                                    class="form-control"
+                                    @bind-Value="createUserDto.Name"
+                                    placeholder="ユーザー名を入力してください"
+                                    maxlength="50" />
                             <ValidationMessage For="@(() => createUserDto.Name)" class="text-danger" />
                             <div class="form-text">
                                 ユーザーの表示名を入力してください（最大50文字）
@@ -182,13 +188,6 @@
             isSubmitting = true;
             errorMessage = null;
             successMessage = null;
-
-            // バリデーション
-            if (string.IsNullOrWhiteSpace(createUserDto.Code))
-            {
-                errorMessage = "コードは必須です。";
-                return;
-            }
 
             // ユーザー作成
             await UserCommandUseCase.CreateAsync(createUserDto);
