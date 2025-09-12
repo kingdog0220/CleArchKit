@@ -1,3 +1,4 @@
+using CleArchKit.Application.Persistence;
 using CleArchKit.Application.Users.Dtos;
 using CleArchKit.Application.Users.Services;
 using CleArchKit.Application.Users.UseCases.Command;
@@ -15,6 +16,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<IUserService> _mockUserService;
         private readonly UserCommandUseCase _userCommandUseCase;
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
 
         /// <summary>
         /// コンストラクタ - テスト用のモックオブジェクトを設定
@@ -23,10 +25,12 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _mockUserService = new Mock<IUserService>();
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
 
             _userCommandUseCase = new UserCommandUseCase(
                 _mockUserRepository.Object,
-                _mockUserService.Object);
+                _mockUserService.Object,
+                _mockUnitOfWork.Object);
         }
 
         #region CreateAsync Tests

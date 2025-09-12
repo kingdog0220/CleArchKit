@@ -1,3 +1,4 @@
+using CleArchKit.Application.Persistence;
 using CleArchKit.Application.Users.Dtos;
 using CleArchKit.Application.Users.Services;
 using CleArchKit.Domain.Users.Repositories;
@@ -18,14 +19,21 @@ namespace CleArchKit.Application.Users.UseCases.Command
         IUserService _userService;
 
         /// <summary>
+        /// Unit of Workパターン
+        /// </summary>
+        IUnitOfWork _unitOfWork;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="userRepository"></param>
         /// <param name="userService"></param>
-        public UserCommandUseCase(IUserRepository userRepository, IUserService userService)
+        /// <param name="unitOfWork"></param>
+        public UserCommandUseCase(IUserRepository userRepository, IUserService userService, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _userService = userService;
+            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
@@ -45,6 +53,7 @@ namespace CleArchKit.Application.Users.UseCases.Command
             }
 
             await _userRepository.AddAsync(createUser);
+            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
@@ -64,6 +73,7 @@ namespace CleArchKit.Application.Users.UseCases.Command
 
             var updateUser = updateUserDto.ToEntity();
             await _userRepository.UpdateAsync(updateUser);
+            await _unitOfWork.CommitAsync();
         }
 
         /// <inheritdoc/>
@@ -76,6 +86,7 @@ namespace CleArchKit.Application.Users.UseCases.Command
             }
 
             await _userRepository.DeleteAsync(user);
+            await _unitOfWork.CommitAsync();
         }
 
     }
