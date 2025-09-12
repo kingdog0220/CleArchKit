@@ -1,9 +1,12 @@
 @page "/users"
 
 @using CleArchKit.Application.Users.UseCases.Query
+@using CleArchKit.Application.Users.UseCases.Command
 @using CleArchKit.Domain.Users.Entities
 
 @inject IUserQueryUseCase UserQueryUseCase
+@inject IUserCommandUseCase UserCommandUseCase
+@inject IJSRuntime JSRuntime
 
 <PageTitle>ユーザー一覧</PageTitle>
 
@@ -40,6 +43,7 @@ else if (users != null && users.Any())
                     <th scope="col">状態</th>
                     <th scope="col">作成日時</th>
                     <th scope="col">更新日時</th>
+                    <th scope="col">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,6 +87,20 @@ else if (users != null && users.Any())
                                 <small class="text-muted">-</small>
                             }
                         </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" @onclick="() => ShowDeleteConfirmation(user.Id, user.Name)"
+                                disabled="@isDeleting">
+                                @if (isDeleting && deletingUserId == user.Id)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span class="visually-hidden">削除中...</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-trash"></i>
+                                }
+                            </button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -100,10 +118,58 @@ else
     </div>
 }
 
+<!-- 削除確認モーダル -->
+@if (showDeleteModal)
+{
+    <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">削除確認</h5>
+                    <button type="button" class="btn-close" @onclick="HideDeleteConfirmation"
+                        disabled="@isDeleting"></button>
+                </div>
+                <div class="modal-body">
+                    <p>以下のユーザーを削除してもよろしいですか？</p>
+                    <div class="alert alert-warning">
+                        <strong>ユーザー名:</strong> @deleteTargetUserName<br>
+                        <strong>ID:</strong> @deleteTargetUserId
+                    </div>
+                    <p class="text-danger"><strong>※この操作は取り消せません。</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="HideDeleteConfirmation"
+                        disabled="@isDeleting">
+                        キャンセル
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="DeleteUserAsync" disabled="@isDeleting">
+                        @if (isDeleting)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span>削除中...</span>
+                        }
+                        else
+                        {
+                            <span>削除する</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private IEnumerable<User>? users;
     private bool isLoading = true;
     private string? errorMessage;
+
+    // 削除関連の状態
+    private bool showDeleteModal = false;
+    private bool isDeleting = false;
+    private Guid deleteTargetUserId;
+    private string deleteTargetUserName = string.Empty;
+    private Guid? deletingUserId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,6 +191,50 @@ else
         finally
         {
             isLoading = false;
+        }
+    }
+
+    private void ShowDeleteConfirmation(Guid userId, string? userName)
+    {
+        deleteTargetUserId = userId;
+        deleteTargetUserName = userName ?? string.Empty;
+        showDeleteModal = true;
+    }
+
+    private void HideDeleteConfirmation()
+    {
+        showDeleteModal = false;
+        deleteTargetUserId = Guid.Empty;
+        deleteTargetUserName = string.Empty;
+    }
+
+    private async Task DeleteUserAsync()
+    {
+        try
+        {
+            isDeleting = true;
+            deletingUserId = deleteTargetUserId;
+            errorMessage = null;
+
+            await UserCommandUseCase.DeleteAsync(deleteTargetUserId);
+
+            // 削除成功後、ユーザー一覧を再取得
+            await LoadUsersAsync();
+
+            // モーダルを閉じる
+            HideDeleteConfirmation();
+
+            // 成功メッセージを表示（JSを使用）
+            await JSRuntime.InvokeVoidAsync("alert", "ユーザーを削除しました。");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"ユーザーの削除に失敗しました: {ex.Message}";
+        }
+        finally
+        {
+            isDeleting = false;
+            deletingUserId = null;
         }
     }
 }
