@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CleArchKit.Application.Persistence;
 using CleArchKit.Application.Users.Services;
 using CleArchKit.Application.Users.UseCases.Query;
+using CleArchKit.Application.Users.UseCases.Command;
 using CleArchKit.Domain.Users.Repositories;
 using CleArchKit.Infrastructure.Persistence;
 using CleArchKit.Infrastructure.Persistence.Postgresql;
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Application Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
+builder.Services.AddScoped<IUserCommandUseCase, UserCommandUseCase>();
 
 var app = builder.Build();
 

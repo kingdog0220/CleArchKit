@@ -1,0 +1,238 @@
+@page "/users/create"
+
+@using CleArchKit.Application.Users.UseCases.Command
+@using CleArchKit.Application.Users.Dtos
+@using CleArchKit.Application.Persistence
+
+@inject IUserCommandUseCase UserCommandUseCase
+@inject IUnitOfWork UnitOfWork
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<PageTitle>ユーザー新規登録</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/users">ユーザー一覧</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">新規登録</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">
+                <i class="bi bi-person-plus"></i> ユーザー新規登録
+            </h1>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>エラー:</strong> @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i>
+                    @successMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i> 基本情報
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@createUserDto" OnValidSubmit="@HandleValidSubmit" FormName="CreateUserForm">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label for="code" class="form-label">
+                                コード <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="code"
+                                    class="form-control"
+                                    @bind-Value="createUserDto.Code"
+                                    placeholder="ユーザーコードを入力してください"
+                                    maxlength="50" />
+                            <ValidationMessage For="@(() => createUserDto.Code)" class="text-danger" />
+                            <div class="form-text">
+                                英数字とハイフン、アンダースコアが使用できます（最大50文字）
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">名称</label>
+                            <InputText id="name"
+                                    class="form-control"
+                                    @bind-Value="createUserDto.Name"
+                                    placeholder="ユーザー名を入力してください"
+                                    maxlength="100" />
+                            <ValidationMessage For="@(() => createUserDto.Name)" class="text-danger" />
+                            <div class="form-text">
+                                ユーザーの表示名を入力してください（最大100文字）
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <InputCheckbox id="isActive"
+                                            class="form-check-input"
+                                            @bind-Value="createUserDto.IsActive" />
+                                <label class="form-check-label" for="isActive">
+                                    有効
+                                </label>
+                            </div>
+                            <div class="form-text">
+                                チェックを入れるとユーザーが有効になります
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit"
+                                    class="btn btn-primary"
+                                    disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span>登録中...</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-check"></i>
+                                    <span>登録</span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+
+                    <div class="mt-3">
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                @onclick="NavigateToUserList"
+                                disabled="@isSubmitting">
+                            <i class="bi bi-arrow-left"></i> 一覧に戻る
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xl-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightbulb"></i> 入力のヒント
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>コードについて</h6>
+                    <ul class="small">
+                        <li>システム内で一意である必要があります</li>
+                        <li>英数字、ハイフン（-）、アンダースコア（_）が使用できます</li>
+                        <li>例: user001, admin-user, test_user</li>
+                    </ul>
+
+                    <h6 class="mt-3">名称について</h6>
+                    <ul class="small">
+                        <li>ユーザーの表示名として使用されます</li>
+                        <li>日本語、英語などの文字が使用できます</li>
+                        <li>空白のままでも登録できます</li>
+                    </ul>
+
+                    <h6 class="mt-3">有効フラグについて</h6>
+                    <ul class="small">
+                        <li>チェックを入れるとユーザーが有効になります</li>
+                        <li>無効なユーザーはシステムにログインできません</li>
+                        <li>後から変更することも可能です</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private CreateUserDto createUserDto = new CreateUserDto
+    {
+        Code = string.Empty,
+        Name = string.Empty,
+        IsActive = true
+    };
+
+    private bool isSubmitting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            isSubmitting = true;
+            errorMessage = null;
+            successMessage = null;
+
+            // バリデーション
+            if (string.IsNullOrWhiteSpace(createUserDto.Code))
+            {
+                errorMessage = "コードは必須です。";
+                return;
+            }
+
+            // ユーザー作成
+            await UserCommandUseCase.CreateAsync(createUserDto);
+
+            successMessage = "ユーザーが正常に登録されました。";
+
+            // フォームをリセット
+            createUserDto = new CreateUserDto
+            {
+                Code = string.Empty,
+                Name = string.Empty,
+                IsActive = true
+            };
+
+            // 成功メッセージを表示後、少し待ってから一覧画面に遷移
+            await Task.Delay(1500);
+            Navigation.NavigateTo("/users");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"ユーザーの登録に失敗しました: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void NavigateToUserList()
+    {
+        Navigation.NavigateTo("/users");
+    }
+}
