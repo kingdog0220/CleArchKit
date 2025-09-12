@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    @if (!string.IsNullOrEmpty(errorMessage))
+    @if (state == SubmitState.Error)
     {
         <div class="row">
             <div class="col-12">
@@ -44,7 +44,7 @@
         </div>
     }
 
-    @if (!string.IsNullOrEmpty(successMessage))
+    @if (state == SubmitState.Success)
     {
         <div class="row">
             <div class="col-12">
@@ -73,11 +73,9 @@
                             <label for="code" class="form-label">
                                 コード <span class="text-danger">*</span>
                             </label>
-                            <InputText id="code"
-                                    class="form-control"
-                                    @bind-Value="createUserDto.Code"
-                                    placeholder="ユーザーコードを入力してください"
-                                    maxlength="10" />
+                            <InputText id="code" class="form-control" @bind-Value="createUserDto.Code"
+                                placeholder="ユーザーコードを入力してください" maxlength="10"
+                                disabled="@(state == SubmitState.Submitting || state == SubmitState.Success)" />
                             <ValidationMessage For="@(() => createUserDto.Code)" class="text-danger" />
                             <div class="form-text">
                                 英数字、ハイフン、アンダースコアが使用できます（最大10文字）
@@ -86,11 +84,9 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">名称</label>
-                            <InputText id="name"
-                                    class="form-control"
-                                    @bind-Value="createUserDto.Name"
-                                    placeholder="ユーザー名を入力してください"
-                                    maxlength="50" />
+                            <InputText id="name" class="form-control" @bind-Value="createUserDto.Name"
+                                placeholder="ユーザー名を入力してください" maxlength="50"
+                                disabled="@(state == SubmitState.Submitting || state == SubmitState.Success)" />
                             <ValidationMessage For="@(() => createUserDto.Name)" class="text-danger" />
                             <div class="form-text">
                                 ユーザーの表示名を入力してください（最大50文字）
@@ -100,7 +96,8 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <InputCheckbox id="isActive" class="form-check-input"
-                                    @bind-Value="createUserDto.IsActive" />
+                                    @bind-Value="createUserDto.IsActive"
+                                    disabled="@(state == SubmitState.Submitting || state == SubmitState.Success)" />
                                 <label class="form-check-label" for="isActive">
                                     有効
                                 </label>
@@ -177,22 +174,36 @@
         IsActive = true
     };
 
+    enum SubmitState
+    {
+        // 入力可能
+        Idle,
+        // 登録可能
+        Submitting,
+        // 登録成功
+        Success,
+        // エラー
+        Error
+    }
+
     private bool isSubmitting = false;
     private string? errorMessage;
     private string? successMessage;
+
+    SubmitState state = SubmitState.Idle;
 
     private async Task HandleValidSubmit()
     {
         try
         {
+            state = SubmitState.Submitting;
+
             isSubmitting = true;
             errorMessage = null;
             successMessage = null;
 
             // ユーザー作成
             await UserCommandUseCase.CreateAsync(createUserDto);
-
-            successMessage = "ユーザーが正常に登録されました。";
 
             // フォームをリセット
             createUserDto = new CreateUserDto
@@ -202,17 +213,24 @@
                 IsActive = true
             };
 
-            // 成功メッセージを表示後、少し待ってから一覧画面に遷移
-            await Task.Delay(1500);
-            Navigation.NavigateTo("/users");
+            // 成功時の処理
+            state = SubmitState.Success;
+            isSubmitting = false;
+            successMessage = "ユーザーが正常に登録されました。一覧画面に戻ります。";
+
+            // 少し待ってから一覧画面に遷移
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                await InvokeAsync(() => Navigation.NavigateTo("/users"));
+            });
+
         }
         catch (Exception ex)
         {
             errorMessage = $"ユーザーの登録に失敗しました: {ex.Message}";
-        }
-        finally
-        {
             isSubmitting = false;
+            state = SubmitState.Error;
         }
     }
 
