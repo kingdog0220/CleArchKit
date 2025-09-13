@@ -1,11 +1,13 @@
 @page "/users"
 
+@using CleArchKit.Application.Expands
 @using CleArchKit.Application.Users.UseCases.Query
 @using CleArchKit.Application.Users.UseCases.Command
 @using CleArchKit.Domain.Users.Entities
 
 @inject IUserQueryUseCase UserQueryUseCase
 @inject IUserCommandUseCase UserCommandUseCase
+@inject IUseCaseExecutor UseCaseExecutor
 
 <PageTitle>ユーザー一覧</PageTitle>
 
@@ -83,8 +85,7 @@ else if (users != null && users.Any())
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a href="/users/update/@user.Id" class="btn btn-outline-primary btn-sm"
-                                   title="編集">
+                                <a href="/users/update/@user.Id" class="btn btn-outline-primary btn-sm" title="編集">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <button class="btn btn-danger btn-sm" @onclick="() => ShowDeleteConfirmation(user.Id, user.Name)"
@@ -263,7 +264,7 @@ else
             isDeleting = true;
             errorMessage = null;
 
-            await UserCommandUseCase.DeleteAsync(deleteTargetUserId);
+            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.DeleteAsync(deleteTargetUserId));
 
             // 削除成功後、ユーザー一覧を再取得
             await LoadUsersAsync();

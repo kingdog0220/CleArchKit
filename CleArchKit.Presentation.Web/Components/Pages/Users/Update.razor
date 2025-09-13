@@ -1,5 +1,6 @@
 @page "/users/update/{id:guid}"
 
+@using CleArchKit.Application.Expands
 @using CleArchKit.Application.Users.UseCases.Command
 @using CleArchKit.Application.Users.UseCases.Query
 @using CleArchKit.Application.Users.Dtos
@@ -8,6 +9,7 @@
 
 @inject IUserCommandUseCase UserCommandUseCase
 @inject IUserQueryUseCase UserQueryUseCase
+@inject IUseCaseExecutor UseCaseExecutor
 @inject NavigationManager Navigation
 
 <PageTitle>ユーザー更新</PageTitle>
@@ -256,7 +258,7 @@
             successMessage = null;
 
             // ユーザー更新
-            await UserCommandUseCase.UpdateAsync(updateUserDto);
+            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.UpdateAsync(updateUserDto));
 
             // 成功時の処理
             state = SubmitState.Success;

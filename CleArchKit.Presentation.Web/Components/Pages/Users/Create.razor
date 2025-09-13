@@ -1,11 +1,13 @@
 @page "/users/create"
 
+@using CleArchKit.Application.Expands
 @using CleArchKit.Application.Users.UseCases.Command
 @using CleArchKit.Application.Users.Dtos
 @using CleArchKit.Application.Persistence
 @using CleArchKit.Presentation.Web.Components.Enums
 
 @inject IUserCommandUseCase UserCommandUseCase
+@inject IUseCaseExecutor UseCaseExecutor
 @inject NavigationManager Navigation
 
 <PageTitle>ユーザー新規登録</PageTitle>
@@ -190,7 +192,7 @@
             successMessage = null;
 
             // ユーザー作成
-            await UserCommandUseCase.CreateAsync(createUserDto);
+            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.CreateAsync(createUserDto));
 
             // フォームをリセット
             createUserDto = new CreateUserDto
