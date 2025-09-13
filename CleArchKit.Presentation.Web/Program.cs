@@ -9,6 +9,7 @@ using CleArchKit.Infrastructure.Persistence.Postgresql;
 using CleArchKit.Infrastructure.Persistence.Users.Repositories;
 using CleArchKit.Presentation.Web.Components;
 using Microsoft.EntityFrameworkCore;
+using CleArchKit.Application.Expands;
 
 // マイグレーションが全部適用済みかチェックする
 // マイグレーションを使用しない、適用済みかチェックしなくてもいい場合はこのコードは削除して問題ない
@@ -52,6 +53,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
 builder.Services.AddScoped<IUserCommandUseCase, UserCommandUseCase>();
+builder.Services.AddScoped<IUseCaseExecutor, UseCaseExecutor>();
 
 var app = builder.Build();
 
