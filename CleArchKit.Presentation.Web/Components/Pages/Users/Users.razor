@@ -6,7 +6,6 @@
 
 @inject IUserQueryUseCase UserQueryUseCase
 @inject IUserCommandUseCase UserCommandUseCase
-@inject IJSRuntime JSRuntime
 
 <PageTitle>ユーザー一覧</PageTitle>
 
@@ -25,12 +24,7 @@
         </div>
     </div>
 }
-else if (errorMessage != null)
-{
-    <div class="alert alert-danger" role="alert">
-        <strong>エラー:</strong> @errorMessage
-    </div>
-}
+
 else if (users != null && users.Any())
 {
     <div class="table-responsive">
@@ -159,6 +153,35 @@ else
     </div>
 }
 
+<!-- トーストコンテナ -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+    @if (showSuccessToast)
+    {
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <strong class="me-auto">成功</strong>
+            </div>
+            <div class="toast-body">
+                @successMessage
+            </div>
+        </div>
+    }
+    @if (showErrorToast)
+    {
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong class="me-auto">エラー</strong>
+                <button type="button" class="btn-close btn-close-white" @onclick="HideErrorToast"></button>
+            </div>
+            <div class="toast-body">
+                @errorMessage
+            </div>
+        </div>
+    }
+</div>
+
 @code {
     private IEnumerable<User>? users;
     private bool isLoading = true;
@@ -170,6 +193,11 @@ else
     private Guid deleteTargetUserId;
     private string deleteTargetUserName = string.Empty;
     private Guid? deletingUserId;
+
+    // トースト関連の状態
+    private bool showSuccessToast = false;
+    private string successMessage = string.Empty;
+    private bool showErrorToast = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -187,6 +215,7 @@ else
         catch (Exception ex)
         {
             errorMessage = $"ユーザー一覧の取得に失敗しました: {ex.Message}";
+            ShowErrorToast(errorMessage);
         }
         finally
         {
@@ -224,12 +253,15 @@ else
             // モーダルを閉じる
             HideDeleteConfirmation();
 
-            // 成功メッセージを表示（JSを使用）
-            await JSRuntime.InvokeVoidAsync("alert", "ユーザーを削除しました。");
+            // 成功メッセージを表示
+            ShowSuccessToast("ユーザーを削除しました。");
         }
         catch (Exception ex)
         {
+            // モーダルを閉じる
+            HideDeleteConfirmation();
             errorMessage = $"ユーザーの削除に失敗しました: {ex.Message}";
+            ShowErrorToast(errorMessage);
         }
         finally
         {
@@ -237,4 +269,35 @@ else
             deletingUserId = null;
         }
     }
+
+    private void ShowSuccessToast(string message)
+    {
+        successMessage = message;
+        showSuccessToast = true;
+
+        // 3秒後に自動で非表示
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(3000);
+            await InvokeAsync(() =>
+            {
+                showSuccessToast = false;
+                successMessage = string.Empty;
+                StateHasChanged();
+            });
+        });
+    }
+
+    private void ShowErrorToast(string message)
+    {
+        errorMessage = message;
+        showErrorToast = true;
+    }
+
+    private void HideErrorToast()
+    {
+        errorMessage = string.Empty;
+        showErrorToast = false;
+    }
+
 }
