@@ -303,11 +303,11 @@ else
         {
             await Task.Delay(3000);
             await InvokeAsync(() =>
-    {
-            showSuccessToast = false;
-            successMessage = string.Empty;
-            StateHasChanged();
-        });
+            {
+                showSuccessToast = false;
+                successMessage = string.Empty;
+                StateHasChanged();
+            });
         });
     }
 
