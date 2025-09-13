@@ -19,7 +19,7 @@ namespace CleArchKit.Application.Expands
         }
 
         /// <inheritdoc/>
-        public async Task ExecuteAsync<TUseCase>(Func<TUseCase, Task> useCaseFunc) where TUseCase : notnull
+        public async Task CreateScope<TUseCase>(Func<TUseCase, Task> useCaseFunc) where TUseCase : notnull
         {
             //ユースケースごとにDbContextのスコープを生成
             using (var scope = _serviceProvider.CreateScope())

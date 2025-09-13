@@ -6,11 +6,11 @@ namespace CleArchKit.Application.Expands
     public interface IUseCaseExecutor
     {
         /// <summary>
-        /// ユースケースを実行する
+        /// ユースケースごとにスコープを作成する
         /// </summary>
         /// <param name="useCaseFunc"></param>
         /// <typeparam name="TUseCase"></typeparam>
-        Task ExecuteAsync<TUseCase>(Func<TUseCase, Task> useCaseFunc) where TUseCase : notnull;
+        Task CreateScope<TUseCase>(Func<TUseCase, Task> useCaseFunc) where TUseCase : notnull;
 
     }
 }

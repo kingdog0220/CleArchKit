@@ -192,7 +192,7 @@
             successMessage = null;
 
             // ユーザー作成
-            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.CreateAsync(createUserDto));
+            await UseCaseExecutor.CreateScope<IUserCommandUseCase>(uc => uc.CreateAsync(createUserDto));
 
             // フォームをリセット
             createUserDto = new CreateUserDto

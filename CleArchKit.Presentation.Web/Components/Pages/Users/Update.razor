@@ -258,7 +258,7 @@
             successMessage = null;
 
             // ユーザー更新
-            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.UpdateAsync(updateUserDto));
+            await UseCaseExecutor.CreateScope<IUserCommandUseCase>(uc => uc.UpdateAsync(updateUserDto));
 
             // 成功時の処理
             state = SubmitState.Success;

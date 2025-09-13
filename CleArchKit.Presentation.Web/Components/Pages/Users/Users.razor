@@ -264,7 +264,7 @@ else
             isDeleting = true;
             errorMessage = null;
 
-            await UseCaseExecutor.ExecuteAsync<IUserCommandUseCase>(uc => uc.DeleteAsync(deleteTargetUserId));
+            await UseCaseExecutor.CreateScope<IUserCommandUseCase>(uc => uc.DeleteAsync(deleteTargetUserId));
 
             // 削除成功後、ユーザー一覧を再取得
             await LoadUsersAsync();
