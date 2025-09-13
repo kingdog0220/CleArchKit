@@ -84,7 +84,7 @@ else if (users != null && users.Any())
                         <td>
                             <button class="btn btn-danger btn-sm" @onclick="() => ShowDeleteConfirmation(user.Id, user.Name)"
                                 disabled="@isDeleting">
-                                @if (isDeleting && deletingUserId == user.Id)
+                                @if (isDeleting && deleteTargetUserId == user.Id)
                                 {
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                     <span class="visually-hidden">削除中...</span>
@@ -192,7 +192,6 @@ else
     private bool isDeleting = false;
     private Guid deleteTargetUserId;
     private string deleteTargetUserName = string.Empty;
-    private Guid? deletingUserId;
 
     // トースト関連の状態
     private bool showSuccessToast = false;
@@ -204,6 +203,9 @@ else
         await LoadUsersAsync();
     }
 
+    /// <summary>
+    /// ユーザー一覧を取得する
+    /// </summary>
     private async Task LoadUsersAsync()
     {
         try
@@ -223,6 +225,11 @@ else
         }
     }
 
+    /// <summary>
+    /// 削除確認モーダルを表示する
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="userName"></param>
     private void ShowDeleteConfirmation(Guid userId, string? userName)
     {
         deleteTargetUserId = userId;
@@ -230,6 +237,9 @@ else
         showDeleteModal = true;
     }
 
+    /// <summary>
+    /// 削除確認モーダルを閉じる
+    /// </summary>
     private void HideDeleteConfirmation()
     {
         showDeleteModal = false;
@@ -237,12 +247,14 @@ else
         deleteTargetUserName = string.Empty;
     }
 
+    /// <summary>
+    /// ユーザーを削除する
+    /// </summary>
     private async Task DeleteUserAsync()
     {
         try
         {
             isDeleting = true;
-            deletingUserId = deleteTargetUserId;
             errorMessage = null;
 
             await UserCommandUseCase.DeleteAsync(deleteTargetUserId);
@@ -266,10 +278,14 @@ else
         finally
         {
             isDeleting = false;
-            deletingUserId = null;
+
         }
     }
 
+    /// <summary>
+    /// トースト（成功）を表示する
+    /// </summary>
+    /// /// <param name="message"></param>
     private void ShowSuccessToast(string message)
     {
         successMessage = message;
@@ -280,20 +296,27 @@ else
         {
             await Task.Delay(3000);
             await InvokeAsync(() =>
-            {
-                showSuccessToast = false;
-                successMessage = string.Empty;
-                StateHasChanged();
-            });
+    {
+            showSuccessToast = false;
+            successMessage = string.Empty;
+            StateHasChanged();
+        });
         });
     }
 
+    /// <summary>
+    /// トースト（エラー）を表示する
+    /// </summary>
+    /// /// <param name="message"></param>
     private void ShowErrorToast(string message)
     {
         errorMessage = message;
         showErrorToast = true;
     }
 
+    /// <summary>
+    /// トースト（エラー）を閉じる
+    /// </summary>
     private void HideErrorToast()
     {
         errorMessage = string.Empty;
