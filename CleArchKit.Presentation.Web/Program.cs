@@ -40,7 +40,7 @@ builder.Services.AddRazorComponents()
 
 // DBContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")),ServiceLifetime.Scoped);
 
 // Transaction
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();

@@ -18,7 +18,11 @@ namespace CleArchKit.Infrastructure.Persistence.Postgresql
         /// コンストラクタ
         /// </summary>
         /// <param name="options">DbContextOptions</param>
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+            // デフォルトでトラッキングを無効にする
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        }
 
         /// <summary>
         /// モデルの作成時に呼ばれるメソッド

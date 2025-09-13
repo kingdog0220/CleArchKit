@@ -25,13 +25,14 @@ namespace CleArchKit.Infrastructure.Persistence.Users.Repositories
         /// <inheritdoc/>
         public async Task<List<User>> GetAllAsync()
         {
-            return await _dbContext.Users.AsNoTracking().ToListAsync();
+            return await _dbContext.Users.ToListAsync();
         }
 
         /// <inheritdoc/>
         public async Task<User?> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Users.FindAsync(id);
+            // FindAsyncはNoTracking設定を無視するため、SingleOrDefaultAsyncを使用
+            return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
         /// <inheritdoc/>
@@ -58,7 +59,7 @@ namespace CleArchKit.Infrastructure.Persistence.Users.Repositories
         /// <inheritdoc/>
         public async Task<bool> ExistsByCodeAsync(string code, Guid? excludeId = null)
         {
-            var query = _dbContext.Users.AsNoTracking().Where(u => u.Code == code);
+            var query = _dbContext.Users.Where(u => u.Code == code);
 
             if (excludeId.HasValue) {
                 query = query.Where(u => u.Id != excludeId.Value);
