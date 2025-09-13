@@ -82,18 +82,24 @@ else if (users != null && users.Any())
                             }
                         </td>
                         <td>
-                            <button class="btn btn-danger btn-sm" @onclick="() => ShowDeleteConfirmation(user.Id, user.Name)"
-                                disabled="@isDeleting">
-                                @if (isDeleting && deleteTargetUserId == user.Id)
-                                {
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    <span class="visually-hidden">削除中...</span>
-                                }
-                                else
-                                {
-                                    <i class="bi bi-trash"></i>
-                                }
-                            </button>
+                            <div class="btn-group" role="group">
+                                <a href="/users/update/@user.Id" class="btn btn-outline-primary btn-sm"
+                                   title="編集">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm" @onclick="() => ShowDeleteConfirmation(user.Id, user.Name)"
+                                    disabled="@isDeleting" title="削除">
+                                    @if (isDeleting && deleteTargetUserId == user.Id)
+                                    {
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <span class="visually-hidden">削除中...</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-trash"></i>
+                                    }
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }
