@@ -5,8 +5,12 @@ services:
     image: mcr.microsoft.com/dotnet/sdk:9.0
     container_name: clearchkit-app
     volumes:
-      - .:/workspace
+      - ./:/workspace:cached
+      - ./.devcontainer:/workspace/.devcontainer:cached
     working_dir: /workspace
+    ports:
+      - "5284:5000"  # HTTP
+      - "5285:5001"  # HTTPS
     command: sleep infinity
     depends_on:
       - postgres

@@ -1,25 +1,21 @@
 {
-  "name": "CleArchKit Dev",
-  "dockerComposeFile": "../docker-compose.yml",
-  "service": "app",
-  "runServices": ["postgres"],
-  "workspaceFolder": "/workspace",
-  // Dev Container 内で環境変数を自動設定
-  "containerEnv": {
-    "ASPNETCORE_ENVIRONMENT": "Development"
-  },
-  // VS Code 起動時に .NET Restore を自動実行
-  "postCreateCommand": "dotnet restore CleArchKit.sln",
-  
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-dotnettools.csharp",
-        "ms-azuretools.vscode-docker"
-      ],
-      "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
-      }
+    "name": "CleArchKit Dev",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            }
+        }
+    },
+    "postCreateCommand": "bash /workspace/.devcontainer/init.sh",
+    "remoteEnv": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
     }
-  }
 }
