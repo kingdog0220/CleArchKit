@@ -1,19 +1,19 @@
-version: "3.9"
-
 services:
   app:
-    image: mcr.microsoft.com/dotnet/sdk:9.0
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
     container_name: clearchkit-app
     volumes:
       - ./:/workspace:cached
-      - ./.devcontainer:/workspace/.devcontainer:cached
     working_dir: /workspace
     ports:
-      - "5284:5000"  # HTTP
-      - "5285:5001"  # HTTPS
+      - "127.0.0.1:5284:5000" #HTTP
+      - "127.0.0.1:5285:5001" #HTTPS
     command: sleep infinity
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:16
@@ -26,6 +26,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U template"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres-data:
