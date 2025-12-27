@@ -19,7 +19,7 @@ services:
     image: postgres:16
     container_name: clearchkit-postgres
     environment:
-      POSTGRES_DB: blazor_wasm_template
+      POSTGRES_DB: template
       POSTGRES_USER: template
       POSTGRES_PASSWORD: template
     ports:
