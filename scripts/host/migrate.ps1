@@ -1,0 +1,1 @@
+docker compose exec app bash /workspace/scripts/container/migrate.sh
