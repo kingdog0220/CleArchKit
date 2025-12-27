@@ -1,0 +1,13 @@
+# 開発支援ツールとしてAI支援の qodo CLI をインストールした Node.js 開発環境イメージ
+FROM node:24-slim
+
+# qodo が必要とする最小ツール
+RUN apt-get update && apt-get install -y \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# qodo CLI をグローバルインストール
+RUN npm install -g @qodo/command
+
+WORKDIR /work

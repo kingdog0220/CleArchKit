@@ -1,0 +1,10 @@
+services:
+  node-tools:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile.node-tools
+    volumes:
+      - .:/work
+    env_file:
+      - .env.tools.local
+    tty: true
