@@ -40,7 +40,7 @@ switch ($Command) {
     }
 
     "qodo" {
-        ./scripts/qodo.ps1 @Args
+        ./scripts/host/qodo.ps1 @Args
     }
 
     default {
