@@ -11,12 +11,20 @@ namespace CleArchKit.Migrations.Postgresql
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            // 作業ディレクトリ（dotnet ef 実行位置）
+            var basePath = Directory.GetCurrentDirectory();
 
-            IConfiguration configuration = builder.Configuration;
+            // appsettings を直接読む
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(basePath)
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .AddJsonFile("appsettings.Production.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-
+            var connectionString = configuration.GetConnectionString("DefaultConnection") 
+            ?? throw new InvalidOperationException("Connection string not found.");
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseNpgsql(

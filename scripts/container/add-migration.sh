@@ -25,8 +25,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 MIGRATIONS_PROJECT="$ROOT_DIR/CleArchKit.Migrations"
-STARTUP_PROJECT="$ROOT_DIR/CleArchKit.Infrastructure"
-OUTPUT_DIR="Postgresql\Migrations"
+OUTPUT_DIR="Postgresql/Migrations"
 
 #####################################
 # 事前チェック
@@ -54,7 +53,6 @@ echo "========================================"
 
 dotnet ef migrations add "$MIGRATION_NAME" \
   --project "$MIGRATIONS_PROJECT" \
-  --startup-project "$STARTUP_PROJECT" \
   --output-dir "$OUTPUT_DIR"
 
 #####################################
