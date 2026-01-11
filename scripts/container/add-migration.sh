@@ -22,7 +22,7 @@ export ASPNETCORE_ENVIRONMENT="$ENVIRONMENT"
 # パス解決（どこからでもOK）
 #####################################
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 MIGRATIONS_PROJECT="$ROOT_DIR/CleArchKit.Migrations"
 STARTUP_PROJECT="$ROOT_DIR/CleArchKit.Infrastructure"
