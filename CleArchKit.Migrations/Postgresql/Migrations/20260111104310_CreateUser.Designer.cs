@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleArchKit.Migrations.Postgresql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250830123705_CreateUser")]
+    [Migration("20260111104310_CreateUser")]
     partial class CreateUser
     {
         /// <inheritdoc />
@@ -42,10 +42,6 @@ namespace CleArchKit.Migrations.Postgresql.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
