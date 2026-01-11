@@ -46,7 +46,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             {
                 Code = "USER001",
                 Name = "テストユーザー",
-                IsActive = true,
             };
 
             _mockUserRepository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((User?)null);
@@ -61,8 +60,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             _mockUserRepository.Verify(x => x.AddAsync(It.Is<User>(u =>
                 u.Id != Guid.Empty &&
                 u.Code == createUserDto.Code &&
-                u.Name == createUserDto.Name &&
-                u.IsActive == createUserDto.IsActive)), Times.Once);
+                u.Name == createUserDto.Name)), Times.Once);
         }
 
         /// <summary>
@@ -76,10 +74,9 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             {
                 Code = "USER001",
                 Name = "テストユーザー",
-                IsActive = true,
             };
 
-            var existingUser = new User(Guid.NewGuid(), "EXISTING001", "既存ユーザー", true, DateTime.Now, DateTime.Now);
+            var existingUser = new User(Guid.NewGuid(), "EXISTING001", "既存ユーザー", DateTime.Now, DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(existingUser);
 
             // Act & Assert
@@ -103,7 +100,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             {
                 Code = "USER001",
                 Name = "テストユーザー",
-                IsActive = true,
             };
 
             _mockUserRepository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((User?)null);
@@ -135,11 +131,10 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
-                IsActive = true,
                 CreatedAt = DateTime.Now.AddDays(-1),
             };
 
-            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "更新前ユーザー", false, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
+            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "更新前ユーザー", DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
             _mockUserRepository.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
             _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(false);
 
@@ -152,8 +147,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             _mockUserRepository.Verify(x => x.UpdateAsync(It.Is<User>(u =>
                 u.Id == updateUserDto.Id &&
                 u.Code == updateUserDto.Code &&
-                u.Name == updateUserDto.Name &&
-                u.IsActive == updateUserDto.IsActive)), Times.Once);
+                u.Name == updateUserDto.Name)), Times.Once);
         }
 
         /// <summary>
@@ -168,7 +162,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "存在しないユーザー",
-                IsActive = true,
                 CreatedAt = DateTime.Now,
             };
 
@@ -196,11 +189,10 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新ユーザー",
-                IsActive = true,
                 CreatedAt = DateTime.Now,
             };
 
-            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "既存ユーザー", true, DateTime.Now, DateTime.Now);
+            var existingUser = new User(updateUserDto.Id, "OLD_CODE", "既存ユーザー", DateTime.Now, DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
             _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(true);
 
@@ -226,11 +218,10 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
-                IsActive = true,
                 CreatedAt = DateTime.Now,
             };
 
-            var existingUser = new User(updateUserDto.Id, "USER001", "更新前ユーザー", false, DateTime.Now, DateTime.Now);
+            var existingUser = new User(updateUserDto.Id, "USER001", "更新前ユーザー", DateTime.Now, DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync(existingUser);
             _mockUserService.Setup(x => x.ExistsByCodeAsync(updateUserDto.Code, updateUserDto.Id)).ReturnsAsync(false);
 
@@ -254,7 +245,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task DeleteAsync_WhenValidUser_DeletesUserSuccessfully()
         {
             // Arrange
-            var existingUser = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.Now.AddDays(-1), DateTime.Now);
+            var existingUser = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", DateTime.Now.AddDays(-1), DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(existingUser.Id)).ReturnsAsync(existingUser);
 
             // Act
@@ -265,8 +256,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
             _mockUserRepository.Verify(x => x.DeleteAsync(It.Is<User>(u =>
                 u.Id == existingUser.Id &&
                 u.Code == existingUser.Code &&
-                u.Name == existingUser.Name &&
-                u.IsActive == existingUser.IsActive)), Times.Once);
+                u.Name == existingUser.Name)), Times.Once);
         }
 
         /// <summary>
@@ -276,7 +266,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
         public async Task DeleteAsync_WhenUserDoesNotExist_ThrowsException()
         {
             // Arrange
-            var notExistingUser = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", true, DateTime.Now.AddDays(-1), DateTime.Now);
+            var notExistingUser = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", DateTime.Now.AddDays(-1), DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(notExistingUser.Id)).ReturnsAsync((User?)null);
 
             // Act & Assert

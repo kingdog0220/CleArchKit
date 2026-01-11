@@ -27,11 +27,6 @@ namespace CleArchKit.Application.Users.Dtos
         public string? Name { get; set; }
 
         /// <summary>
-        /// 有効/無効フラグ
-        /// </summary>
-        public bool IsActive { get; set; }
-
-        /// <summary>
         /// 作成日時
         /// </summary>
 
@@ -43,7 +38,7 @@ namespace CleArchKit.Application.Users.Dtos
         /// <returns>DTO</returns>
         public User ToEntity()
         {
-            return new User(this.Id, this.Code, this.Name, this.IsActive, this.CreatedAt, DateTime.UtcNow);
+            return new User(this.Id, this.Code, this.Name, this.CreatedAt, DateTime.UtcNow);
         }
     }
 }

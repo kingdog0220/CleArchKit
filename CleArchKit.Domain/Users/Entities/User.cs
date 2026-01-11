@@ -21,11 +21,6 @@ namespace CleArchKit.Domain.Users.Entities
         public string? Name { get; set; }
 
         /// <summary>
-        /// 有効/無効フラグ
-        /// </summary>
-        public bool IsActive { get; set; }
-
-        /// <summary>
         /// 作成日時
         /// </summary>
 
@@ -48,13 +43,13 @@ namespace CleArchKit.Domain.Users.Entities
         /// </summary>
         /// <param name="code"></param>
         /// <param name="name"></param>
-        /// <param name="isActive"></param> <summary>
-        public User(Guid id, string code, string? name, bool isActive, DateTime? createdAt, DateTime? updatedAt)
+        /// <param name="createdAt"></param>
+        /// <param name="updatedAt"></param>
+        public User(Guid id, string code, string? name, DateTime? createdAt, DateTime? updatedAt)
         {
             Id = id;
             Code = code;
             Name = name;
-            IsActive = isActive;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }

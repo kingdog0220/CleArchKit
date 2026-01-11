@@ -18,7 +18,6 @@ Content-Type: application/json
 {
     "code": "TEST01",
     "name": "TEST",
-    "isActive": true
 }
 
 ### ユーザー更新
@@ -29,7 +28,6 @@ Content-Type: application/json
     "id": "{{testId}}",
     "code": "TEST_UP_02",
     "name": "TEST_UPDATE",
-    "isActive": true
 }
 
 ### ユーザー削除

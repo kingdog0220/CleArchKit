@@ -54,16 +54,6 @@ else if (users != null && users.Any())
                         </td>
                         <td>@user.Name</td>
                         <td>
-                            @if (user.IsActive)
-                            {
-                                <span class="badge bg-success">有効</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">無効</span>
-                            }
-                        </td>
-                        <td>
                             @if (user.CreatedAt.HasValue)
                             {
                                 <small>@user.CreatedAt.Value.ToString("yyyy/MM/dd HH:mm")</small>

@@ -22,17 +22,12 @@ namespace CleArchKit.Application.Users.Dtos
         public string? Name { get; set; }
 
         /// <summary>
-        /// 有効/無効フラグ
-        /// </summary>
-        public bool IsActive { get; set; }
-
-        /// <summary>
         /// DTOからEntityに変換する
         /// </summary>
         /// <returns>DTO</returns>
         public User ToEntity()
         {
-            return new User(Guid.NewGuid(), this.Code, this.Name, this.IsActive, DateTime.UtcNow, null);
+            return new User(Guid.NewGuid(), this.Code, this.Name, DateTime.UtcNow, null);
         }
 
     }

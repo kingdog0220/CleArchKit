@@ -33,9 +33,9 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Query
             // Arrange
             var expectedUsers = new List<User>
             {
-                new User(Guid.NewGuid(), "USER001", "テストユーザー1", true, DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-1)),
-                new User(Guid.NewGuid(), "USER002", "テストユーザー2", false, DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-2)),
-                new User(Guid.NewGuid(), "USER003", "テストユーザー3", true, DateTime.Now.AddDays(-1), DateTime.Now)
+                new User(Guid.NewGuid(), "USER001", "テストユーザー1", DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-1)),
+                new User(Guid.NewGuid(), "USER002", "テストユーザー2", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-2)),
+                new User(Guid.NewGuid(), "USER003", "テストユーザー3", DateTime.Now.AddDays(-1), DateTime.Now)
             };
 
             _mockUserRepository.Setup(x => x.GetAllAsync()).ReturnsAsync(expectedUsers);
@@ -81,7 +81,7 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Query
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var expectedUser = new User(userId, "USER001", "テストユーザー", true, DateTime.Now.AddDays(-1), DateTime.Now);
+            var expectedUser = new User(userId, "USER001", "テストユーザー", DateTime.Now.AddDays(-1), DateTime.Now);
             _mockUserRepository.Setup(x => x.GetByIdAsync(userId)).ReturnsAsync(expectedUser);
 
             // Act
@@ -92,7 +92,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Query
             Assert.Equal(expectedUser.Id, result.Id);
             Assert.Equal(expectedUser.Code, result.Code);
             Assert.Equal(expectedUser.Name, result.Name);
-            Assert.Equal(expectedUser.IsActive, result.IsActive);
             Assert.Equal(expectedUser.CreatedAt, result.CreatedAt);
             Assert.Equal(expectedUser.UpdatedAt, result.UpdatedAt);
             _mockUserRepository.Verify(x => x.GetByIdAsync(userId), Times.Once);

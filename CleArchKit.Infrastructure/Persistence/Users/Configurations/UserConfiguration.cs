@@ -31,11 +31,6 @@ namespace CleArchKit.Infrastructure.Persistence.Users.Configurations
             builder.Property(u => u.Name)
                 .HasMaxLength(50);
 
-            // IsActive
-            builder.Property(u => u.IsActive)
-                .IsRequired()
-                .HasColumnName("is_active");
-
             // CreatedAt
             builder.Property(u => u.CreatedAt)
             .HasColumnName("created_at");

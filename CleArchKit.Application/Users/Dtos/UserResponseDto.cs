@@ -23,11 +23,6 @@ namespace CleArchKit.Application.Users.Dtos
         public string? Name { get; set; }
 
         /// <summary>
-        /// 有効/無効フラグ
-        /// </summary>
-        public bool IsActive { get; set; }
-
-        /// <summary>
         /// 作成日時
         /// </summary>
         public DateTime? CreatedAt { get; set; }
@@ -47,7 +42,6 @@ namespace CleArchKit.Application.Users.Dtos
             Id = entity.Id,
             Code = entity.Code,
             Name = entity.Name,
-            IsActive = entity.IsActive,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
         };

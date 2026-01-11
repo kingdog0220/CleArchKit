@@ -60,9 +60,9 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
             // Arrange
             var users = new List<User>
             {
-                new User(Guid.NewGuid(), "USER001", "テストユーザー1", true, DateTime.MinValue, DateTime.MinValue),
-                new User(Guid.NewGuid(), "USER002", "テストユーザー2", false, DateTime.MinValue, DateTime.MinValue),
-                new User(Guid.NewGuid(), "USER003", "テストユーザー3", true, DateTime.MinValue, DateTime.MinValue),
+                new User(Guid.NewGuid(), "USER001", "テストユーザー1", DateTime.MinValue, DateTime.MinValue),
+                new User(Guid.NewGuid(), "USER002", "テストユーザー2", DateTime.MinValue, DateTime.MinValue),
+                new User(Guid.NewGuid(), "USER003", "テストユーザー3", DateTime.MinValue, DateTime.MinValue),
             };
 
             _dbContext.Users.AddRange(users);
@@ -90,7 +90,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task GetByIdAsync_WhenUserExists_ReturnsUser()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", DateTime.MinValue, DateTime.MinValue);
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
@@ -102,7 +102,6 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.NotNull(result);
             Assert.Equal("USER001", result.Code);
             Assert.Equal("テストユーザー", result.Name);
-            Assert.True(result.IsActive);
         }
 
         /// <summary>
@@ -132,7 +131,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync_WhenValidUser_AddsUserToDatabase()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "新規ユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "新規ユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -143,7 +142,6 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Equal(user.Id, addedUser.Id);
             Assert.Equal(user.Code, addedUser.Code);
             Assert.Equal(user.Name, addedUser.Name);
-            Assert.Equal(user.IsActive, addedUser.IsActive);
         }
 
         /// <summary>
@@ -163,7 +161,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync_WhenCalled_EntityStateIsAdded()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -180,7 +178,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task AddAsync_WhenUserAdded_AllPropertiesAreSavedCorrectly()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "詳細テストユーザー", false, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "詳細テストユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.AddAsync(user);
@@ -192,7 +190,6 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
             Assert.Equal(user.Id, savedUser.Id);
             Assert.Equal("USER001", savedUser.Code);
             Assert.Equal("詳細テストユーザー", savedUser.Name);
-            Assert.False(savedUser.IsActive);
             Assert.Equal(DateTime.MinValue, savedUser.CreatedAt);
             Assert.Equal(DateTime.MinValue, savedUser.UpdatedAt);
         }
@@ -208,13 +205,12 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenUserExists_UpdatesUserInDatabase()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "元の名前", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "元の名前", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
             // 更新内容
             user.Name = "更新された名前";
-            user.IsActive = false;
 
             // Act
             await _userRepository.UpdateAsync(user);
@@ -223,7 +219,6 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
             var updatedUser = await _dbContext.Users.FindAsync(user.Id);
             Assert.NotNull(updatedUser);
             Assert.Equal("更新された名前", updatedUser.Name);
-            Assert.False(updatedUser.IsActive);
         }
 
         /// <summary>
@@ -233,7 +228,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenCalled_EntityStateIsModified()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "テストユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act
             await _userRepository.UpdateAsync(user);
@@ -250,7 +245,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task UpdateAsync_WhenUserDoesNotExist_DoesNotThrowException()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "存在しないユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act & Assert
             await Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () =>
@@ -271,7 +266,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserExists_DeletesUserFromDatabase()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -291,7 +286,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserDoesNotExist_DoesNotThrowException()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "非存在ユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "非存在ユーザー", DateTime.MinValue, DateTime.MinValue);
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => _userRepository.DeleteAsync(null!));
@@ -304,8 +299,8 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenDeletingOneUser_DoesNotAffectOtherUsers()
         {
             // Arrange
-            var user1 = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
-            var user2 = new User(Guid.NewGuid(), "USER002", "ユーザー2", true, DateTime.MinValue, DateTime.MinValue);
+            var user1 = new User(Guid.NewGuid(), "USER001", "ユーザー1", DateTime.MinValue, DateTime.MinValue);
+            var user2 = new User(Guid.NewGuid(), "USER002", "ユーザー2", DateTime.MinValue, DateTime.MinValue);
 
             _dbContext.Users.AddRange(user1, user2);
             await _dbContext.SaveChangesAsync();
@@ -340,7 +335,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenUserExists_EntityStateIsDeleted()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -359,7 +354,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task DeleteAsync_WhenDeletingSameUserTwice_DoesNotThrowException()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "削除対象ユーザー", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -386,7 +381,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task ExistsByCodeAsync_Exist()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -404,7 +399,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task ExistsByCodeAsync_NoExist()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", DateTime.MinValue, DateTime.MinValue);
 
             // Act
             var result = await _userRepository.ExistsByCodeAsync(user.Code);
@@ -420,7 +415,7 @@ namespace CleArchKit.Tests.Infrastructure.Persistence.Users.Repositories
         public async Task ExistsByCodeAsync_ExcludeId()
         {
             // Arrange
-            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", true, DateTime.MinValue, DateTime.MinValue);
+            var user = new User(Guid.NewGuid(), "USER001", "ユーザー1", DateTime.MinValue, DateTime.MinValue);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
