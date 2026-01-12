@@ -131,7 +131,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
-                CreatedAt = DateTime.Now.AddDays(-1),
             };
 
             var existingUser = new User(updateUserDto.Id, "OLD_CODE", "更新前ユーザー", DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1));
@@ -162,7 +161,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "存在しないユーザー",
-                CreatedAt = DateTime.Now,
             };
 
             _mockUserRepository.Setup(x => x.GetByIdAsync(updateUserDto.Id)).ReturnsAsync((User?)null);
@@ -189,7 +187,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新ユーザー",
-                CreatedAt = DateTime.Now,
             };
 
             var existingUser = new User(updateUserDto.Id, "OLD_CODE", "既存ユーザー", DateTime.Now, DateTime.Now);
@@ -218,7 +215,6 @@ namespace CleArchKit.Tests.Application.Users.UseCases.Command
                 Id = Guid.NewGuid(),
                 Code = "USER001",
                 Name = "更新後ユーザー",
-                CreatedAt = DateTime.Now,
             };
 
             var existingUser = new User(updateUserDto.Id, "USER001", "更新前ユーザー", DateTime.Now, DateTime.Now);

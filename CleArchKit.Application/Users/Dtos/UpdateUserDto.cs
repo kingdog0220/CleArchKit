@@ -25,20 +25,5 @@ namespace CleArchKit.Application.Users.Dtos
         /// </summary>
         [StringLength(50, ErrorMessage = "名称は50文字以内で入力してください。")]
         public string? Name { get; set; }
-
-        /// <summary>
-        /// 作成日時
-        /// </summary>
-
-        public DateTime? CreatedAt { get; set; }
-
-        /// <summary>
-        /// DTOからEntityに変換する
-        /// </summary>
-        /// <returns>DTO</returns>
-        public User ToEntity()
-        {
-            return new User(this.Id, this.Code, this.Name, this.CreatedAt, DateTime.UtcNow);
-        }
     }
 }

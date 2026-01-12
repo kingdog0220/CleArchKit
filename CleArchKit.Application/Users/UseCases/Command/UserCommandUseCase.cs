@@ -71,8 +71,11 @@ namespace CleArchKit.Application.Users.UseCases.Command
                 throw new Exception($"CODEが重複しています:{updateUserDto.Code}");
             }
 
-            var updateUser = updateUserDto.ToEntity();
-            await _userRepository.UpdateAsync(updateUser);
+            user.Code = updateUserDto.Code;
+            user.Name = updateUserDto.Name;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _userRepository.UpdateAsync(user);
             await _unitOfWork.CommitAsync();
         }
 
