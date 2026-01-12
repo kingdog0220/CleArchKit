@@ -1,3 +1,4 @@
+using CleArchKit.Application.Expands;
 using CleArchKit.Application.Persistence;
 using CleArchKit.Application.Users.Services;
 using CleArchKit.Application.Users.UseCases.Command;
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 // UseCase
 builder.Services.AddScoped<IUserQueryUseCase, UserQueryUseCase>();
 builder.Services.AddScoped<IUserCommandUseCase, UserCommandUseCase>();
+
+builder.Services.AddScoped<IUseCaseExecutor, UseCaseExecutor>();
 
 // Transaction
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();

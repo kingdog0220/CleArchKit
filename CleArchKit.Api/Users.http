@@ -1,7 +1,7 @@
 @apiBaseUrl = http://localhost:5216/api
 
 ### DBに存在するIDを指定
-@testId = 50af5e31-089c-480e-8d63-80632c11480a
+@testId = 634c9f0c-3a67-4683-9de1-9b049e175960
 
 ### ユーザー全件取得
 GET {{apiBaseUrl}}/user/all
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "code": "TEST01",
-    "name": "TEST",
+    "name": "TEST"
 }
 
 ### ユーザー更新
@@ -27,7 +27,7 @@ Content-Type: application/json
 {
     "id": "{{testId}}",
     "code": "TEST_UP_02",
-    "name": "TEST_UPDATE",
+    "name": "TEST_UPDATE"
 }
 
 ### ユーザー削除
