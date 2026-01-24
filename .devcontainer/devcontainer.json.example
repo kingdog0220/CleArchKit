@@ -7,12 +7,7 @@
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csharp",
-                "ms-azuretools.vscode-docker",
-                
-                "formulahendry.dotnet-test-explorer",
-                "hbenl.vscode-test-explorer",
-                "ckolkman.vscode-postgres",
-                "humao.rest-client"
+                "ms-azuretools.vscode-docker"
             ],
             "settings": {
                 "terminal.integrated.shell.linux": "/bin/bash"
