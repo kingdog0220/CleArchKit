@@ -16,6 +16,7 @@ function Help {
     Write-Host "  down            docker compose down"
     Write-Host "  ps              docker compose ps"
     Write-Host "  logs            docker compose logs -f"
+    Write-Host "  open            open the container"
     Write-Host ""
     Write-Host "  qodo            qodo command (node-tools)"
     Write-Host ""
@@ -37,6 +38,10 @@ switch ($Command) {
 
     "logs" {
         docker compose logs -f
+    }
+
+    "open" {
+        docker compose exec -it app bash
     }
 
     "qodo" {
