@@ -123,6 +123,7 @@ if (migrationChecker.ExitCode != 0)
 |dev.ps1 down|docker compose down|
 |dev.ps1 ps|docker compose ps|
 |dev.ps1 logs|docker compose logs -f|
+|dev.ps1 open|docker compose exec -it [container service] bash|
 |dev.ps1 qodo|qodo command|
 |dev.ps1 help|Show Usage|
 
